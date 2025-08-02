@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "379065992155",
+    "project_id": "accounts-9b899",
+    "storage_bucket": "accounts-9b899.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:379065992155:android:26d5d094c1dcb2da639dfe",
+        "android_client_info": {
+          "package_name": "come.epulse.accounts"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2GDuNLGjjPCFfJg7JoD8K0ElBiEBbNTM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

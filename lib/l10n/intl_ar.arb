@@ -1,0 +1,195 @@
+{
+  "@@locale": "ar",
+  "appTitle": "تطبيقي المحاسبي",
+  "splashTitle": "كيف تريد استخدام المحاسبي؟\n(اختر كل ما ينطبق)",
+  "next": "التالي",
+  "alreadyHaveAccount": "لديّ حساب مسبق",
+   "personalTracker": "مصروفاتي الشخصية",
+    "sharing": "حساب مشترك / ديون",
+    "project": "إدارة مشروع",
+      "loginWelcome": "مرحبًا بعودتك! الرجاء اختيار طريقة تسجيل الدخول",
+      "loginWithGoogle": "متابعة عبر جوجل",
+      "loginWithPhone": "متابعة عبر الجوال",
+      "loginWithEmail": "متابعة عبر البريد الإلكتروني",
+      "passwordHint": "كلمه المرور",
+      "rememberMe": "تذكرني" ,
+      "forgotPassword": "نسيت كلمة المرور",
+      "login": "دخول",
+      "or": "او",
+      "loginWithApple": "دخول عبر حساب APPLE",
+  "phoneHint": "أدخل رقم هاتفك",
+  "@phoneHint": {
+    "description": "تعليمات لحقل إدخال رقم الهاتف"
+  },
+  "sendCode": "أرسل الرمز",
+  "@sendCode": {
+    "description": "نص زر لإرسال رمز التحقق"
+  },
+  "codeHint": "أدخل رمز التحقق",
+  "@codeHint": {
+    "description": "تعليمات لحقل إدخال رمز التحقق"
+  },
+  "verify": "تحقق",
+  "@verify": {
+    "description": "نص زر للتحقق من الرمز"
+  },
+  "resendCode": "إعادة إرسال الرمز",
+  "@resendCode": {
+    "description": "نص زر لإعادة إرسال الرمز بعد انتهاء العداد"
+  },
+  "resendIn": "إعادة الإرسال خلال {seconds}ث",
+  "@resendIn": {
+    "description": "النص الذي يعرض العداد قبل تفعيل زر الإرسال",
+    "placeholders": {
+      "seconds": {}
+    }
+  },
+  "personalTab": "شخصي",
+  "groupsTab":   "مجموعات",
+  "projectsTab": "مشاريع",
+   "searchHint": "ابحث بالاسم أو الوصف",
+    "@searchHint": {
+      "description": "نص الحقل المُوَجَّه في شريط البحث في شاشة لوحة القيادة"
+    },
+
+    "spentThisMonth": "المصروفات هذا الشهر",
+    "@spentThisMonth": {
+      "description": "التسمية لإجمالي المصروفات في الشهر الحالي"
+    },
+
+    "incomeThisMonth": "الإيرادات هذا الشهر",
+    "@incomeThisMonth": {
+      "description": "التسمية لإجمالي الإيرادات في الشهر الحالي"
+    },
+
+    "transactionsTab": "المعاملات",
+    "@transactionsTab": {
+      "description": "التسمية لتبويب عرض المعاملات"
+    },
+
+    "reportsTab": "التقارير",
+    "@reportsTab": {
+      "description": "التسمية لتبويب عرض التقارير"
+    },
+     "noTemplatesYet": "لا توجد قوالب بعد",
+      "takePhoto": "التقاط صورة",
+      "pickFromGallery": "اختيار من المعرض",
+      "uploadFailed": "فشل رفع الملف",
+      "amountHint": "أدخل المبلغ",
+      "enterAmount": "الرجاء إدخال مبلغ",
+      "descriptionHint": "أدخل الوصف",
+      "enterDescription": "الرجاء إدخال الوصف",
+      "attachFile": "إرفاق ملف",
+      "newCategoryHint": "فئة جديدة",
+      "income": "دخل",
+      "noTransactions": "لا يوجد اي عمليه سابقة",
+      "expense": "مصروف",
+       "editCategory": "تعديل الفئة",
+        "@editCategory": {
+          "description": "عنوان زر لتعديل فئة"
+        },
+        "deleteCategory": "حذف الفئة",
+        "@deleteCategory": {
+          "description": "عنوان زر لحذف فئة"
+        },
+        "fieldCategoryName": "اسم الفئة",
+        "@fieldCategoryName": {
+          "description": "تسمية حقل نص اسم الفئة"
+        },
+        "selectColor": "اختر اللون",
+        "@selectColor": {
+          "description": "تسمية لفتح منتقي الألوان"
+        },
+        "selectIcon": "اختر الأيقونة",
+        "@selectIcon": {
+          "description": "تسمية لفتح منتقي الأيقونات"
+        },
+        "apply": "تطبيق",
+        "@apply": {
+          "description": "نص زر عام للتأكيد"
+        },
+        "cancel": "إلغاء",
+        "@cancel": {
+          "description": "نص زر عام للإلغاء"
+        },
+        "confirmDeleteCategory": "هل أنت متأكد أنك تريد حذف هذه الفئة؟",
+        "@confirmDeleteCategory": {
+          "description": "رسالة تأكيد قبل حذف الفئة"
+        },
+        "cannotDeleteCategoryWithTxns": "لا يمكن حذف فئة تحتوي على معاملات.",
+        "@cannotDeleteCategoryWithTxns": {
+          "description": "رسالة خطأ عند محاولة حذف فئة مرتبطة بمعاملات"
+        },
+
+         "editTransaction": "تعديل المعاملة",
+          "saveChanges": "حفظ التغييرات",
+          "deleteTransaction": "حذف المعاملة",
+          "confirmDeleteTitle": "هل تريد حذف هذه المعاملة؟",
+          "confirmDeleteContent": "لا يمكن التراجع عن هذا الإجراء.",
+          "yesDelete": "حذف",
+          "transactionUpdated": "تم تعديل المعاملة",
+          "fieldRequired": "هذا الحقل مطلوب",
+          "invalidNumber": "الرقم المدخل غير صحيح",
+          "transactionDeleted": "تم حذف المعاملة",
+            "reportTypeExpense":        "المصروفات",
+            "reportTypeIncome":         "الإيرادات",
+            "reportTypeNet":            "الصافي",
+            "rangeToday":               "اليوم",
+            "rangeWeek":                "هذا الأسبوع",
+            "rangeMonth":               "هذا الشهر",
+            "rangeYear":                "هذا العام",
+            "rangeCustom":              "مخصص",
+            "noReportData":             "لا توجد بيانات لهذه الفترة.",
+            "reportsTitle":             "التقارير",
+            "reportsDateRangeLabel":    "اختر فترة التاريخ",
+            "reportsTypeLabel":         "عرض",
+            "reportsLoading":           "جارٍ تحميل التقرير…",
+     "settingsTitle":         "الإعدادات",
+       "appearanceSection":     "المظهر",
+       "darkMode":              "الوضع الداكن",
+       "languageSection":       "اللغة",
+       "languageEnglish":       "English",
+       "languageArabic":        "العربية",
+       "notificationsSection":  "الإشعارات",
+       "notificationsEnabled":  "تفعيل الإشعارات",
+       "debtsReminderSetting":  "تذكير الديون",
+       "dailyReminderSetting":  "التذكير اليومي",
+       "newsUpdatesSetting":    "أخبار وتحديثات",
+       "accountSection":        "الحساب",
+       "changeName":            "تغيير الاسم",
+       "changeEmail":           "تغيير البريد الإلكتروني",
+       "changePhone":           "تغيير رقم الهاتف",
+       "logout":                "تسجيل خروج",
+       "logoutConfirmation":    "هل أنت متأكد أنّك تريد الخروج؟",
+       "cancel":                "إلغاء",
+    "updateProfilePrompt": "لتتمكن من استخدام المجموعات والمشاريع، يرجى إضافة اسمك الكامل ورقم هاتفك حتى يتمكن الآخرون من العثور عليك.",
+     "@updateProfilePrompt": {
+       "description": "Prompt explaining why we need name & phone before entering groups/projects"
+     },
+
+     "fullName": "الاسم الكامل",
+     "@fullName": {
+       "description": "Label for the full name field"
+     },
+
+     "fullNameHint": "أدخل اسمك الكامل",
+     "@fullNameHint": {
+       "description": "Hint text for the full name field"
+     },
+
+     "nameRequired": "الاسم مطلوب",
+     "@nameRequired": {
+       "description": "Validation message when name is left empty"
+     },
+
+     "phoneRequired": "رقم الهاتف مطلوب",
+     "@phoneRequired": {
+       "description": "Validation message when phone is left empty"
+     },
+
+     "updateProfile": "تحديث الملف الشخصي",
+     "@updateProfile": {
+       "description": "Button text to submit the profile update"
+     }
+
+}

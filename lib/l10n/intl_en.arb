@@ -1,0 +1,172 @@
+{
+  "@@locale": "en",
+  "appTitle": "My Accounting App",
+  "splashTitle": "How do you want to use MyAccounting?\n(select all that apply)",
+  "next": "Next",
+  "alreadyHaveAccount": "I already have an account",
+  "personalTracker": "To Track My Personal Expenses",
+  "sharing": "Shared Accounts/Track Debts",
+  "project": "Project Financial Management",
+    "loginWelcome": "Welcome back! Please choose a login method",
+    "loginWithGoogle": "Continue with Google",
+    "loginWithPhone": "Continue with Phone",
+    "loginWithEmail": "Continue with Email",
+    "passwordHint": "Enter Password",
+          "rememberMe": "Remember me" ,
+          "forgotPassword": "Forgot password?",
+          "login": "Log in ",
+          "or": "or",
+          "loginWithApple": "Sign in with APPLE",
+
+  "phoneHint": "Enter your phone number",
+  "@phoneHint": {
+    "description": "Hint text for the phone number input field"
+  },
+  "sendCode": "Send Code",
+  "@sendCode": {
+    "description": "Label for the button that sends the SMS code"
+  },
+  "codeHint": "Enter verification code",
+  "@codeHint": {
+    "description": "Hint text for the SMS code input field"
+  },
+  "verify": "Verify",
+  "@verify": {
+    "description": "Label for the button that verifies the SMS code"
+  },
+  "resendCode": "Resend Code",
+  "@resendCode": {
+    "description": "Label for the button to resend the SMS code"
+  },
+  "resendIn": "Resend in {seconds}s",
+  "@resendIn": {
+    "description": "Countdown text before the resend button is enabled",
+    "placeholders": {
+      "seconds": {}
+    }
+  },
+  "personalTab": "Personal",
+  "groupsTab":   "Groups",
+  "projectsTab": "Projects",
+   "searchHint": "Search name or description",
+    "@searchHint": {
+      "description": "Placeholder for the search field in the dashboard app bar"
+    },
+
+    "spentThisMonth": "Spent this month",
+    "@spentThisMonth": {
+      "description": "Label for the total amount spent in the current month"
+    },
+
+    "incomeThisMonth": "Income this month",
+    "@incomeThisMonth": {
+      "description": "Label for the total income in the current month"
+    },
+
+    "transactionsTab": "Transactions",
+    "@transactionsTab": {
+      "description": "Tab label for the transactions list"
+    },
+
+    "reportsTab": "Reports",
+    "@reportsTab": {
+      "description": "Tab label for the reports view"
+    },
+      "noTemplatesYet": "No templates yet",
+      "takePhoto": "Take a photo",
+      "pickFromGallery": "Pick from gallery",
+      "uploadFailed": "File upload failed",
+      "amountHint": "Enter amount",
+      "enterAmount": "Please enter an amount",
+      "descriptionHint": "Enter description",
+      "enterDescription": "Please enter a description",
+      "attachFile": "Attach file",
+      "newCategoryHint": "New category",
+      "income": "Income",
+      "noTransactions": "No available data",
+      "expense": "Expense",
+       "editCategory": "Edit Category",
+        "@editCategory": {
+          "description": "Title for the button to edit a category"
+        },
+        "deleteCategory": "Delete Category",
+        "@deleteCategory": {
+          "description": "Title for the button to delete a category"
+        },
+        "fieldCategoryName": "Category Name",
+        "@fieldCategoryName": {
+          "description": "Label for the category name text field"
+        },
+        "selectColor": "Select Color",
+        "@selectColor": {
+          "description": "Label for opening the color picker"
+        },
+        "selectIcon": "Select Icon",
+        "@selectIcon": {
+          "description": "Label for opening the icon picker"
+        },
+        "apply": "Apply",
+        "@apply": {
+          "description": "Generic 'Apply' button text"
+        },
+        "cancel": "Cancel",
+        "@cancel": {
+          "description": "Generic 'Cancel' button text"
+        },
+        "confirmDeleteCategory": "Are you sure you want to delete this category?",
+        "@confirmDeleteCategory": {
+          "description": "Confirmation prompt before deleting a category"
+        },
+        "cannotDeleteCategoryWithTxns": "Cannot delete a category that has transactions.",
+        "@cannotDeleteCategoryWithTxns": {
+          "description": "Error message shown when user tries to delete a category that still has associated transactions"
+        },
+     "editTransaction": "Edit Transaction",
+      "saveChanges": "Save Changes",
+      "deleteTransaction": "Delete Transaction",
+      "confirmDeleteTitle": "Delete this transaction?",
+      "confirmDeleteContent": "This action can’t be undone.",
+      "yesDelete": "Delete",
+      "transactionUpdated": "Transaction updated",
+      "transactionDeleted": "Transaction deleted",
+    "fieldRequired": "This Field is required",
+    "invalidNumber": "Invalid number value",
+    "reportTypeExpense":        "Expenses",
+      "reportTypeIncome":         "Income",
+      "reportTypeNet":            "Net",
+      "rangeToday":               "Today",
+      "rangeWeek":                "Week",
+      "rangeMonth":               "Month",
+      "rangeYear":                "Year",
+      "rangeCustom":              "Custom",
+      "noReportData":             "No data for this period.",
+      "reportsTitle":             "Reports",
+      "reportsDateRangeLabel":    "Select date range",
+      "reportsTypeLabel":         "View",
+      "reportsLoading":           "Loading report…",
+       "settingsTitle":         "Settings",
+        "appearanceSection":     "Appearance",
+        "darkMode":              "Dark Mode",
+        "languageSection":       "Language",
+        "languageEnglish":       "English",
+        "languageArabic":        "Arabic",
+        "notificationsSection":  "Notifications",
+        "notificationsEnabled":  "Enable Notifications",
+        "debtsReminderSetting":  "Debts Reminders",
+        "dailyReminderSetting":  "Daily Reminder",
+        "newsUpdatesSetting":    "News & Updates",
+        "accountSection":        "Account",
+        "changeName":            "Change Name",
+        "changeEmail":           "Change Email",
+        "changePhone":           "Change Phone",
+        "logout":                "Log Out",
+        "logoutConfirmation":    "Are you sure you want to sign out?",
+        "cancel":                "Cancel",
+        "updateProfilePrompt": "To use Groups & Projects, please add your full name and phone number so others can find you.",
+        "fullName": "Full name",
+        "fullNameHint": "Enter your full name",
+        "nameRequired": "Name is required",
+        "phoneRequired": "Phone number is required",
+        "updateProfile": "Update Profile"
+
+}

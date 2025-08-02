@@ -1,0 +1,386 @@
+1. TRANSACTIONS
+1.1 TransactionService (services/transaction_service_impl.dart)
+State & Helpers
+static const _kLastPulledKey
+key in SharedPreferences for downstream sync timestamp.
+
+final Box<TransactionModel> _txnBox
+Hive box holding all local transactions.
+
+final Box<SyncRecord> _queueBox
+Hive box holding pending upstream writes.
+
+final FirebaseFirestore _firestore
+Firestore instance.
+
+final String _userId
+Current Firebase-Auth UID.
+
+final SharedPreferences _prefs
+For persisting lastPulledAt.
+
+CRUD + Queueing
+Future<void> addTransaction(TransactionModel txn)
+
+Writes txn immediately to _txnBox.
+
+Enqueues SyncRecord.create(txn) into _queueBox.
+
+Future<void> updateTransaction(TransactionModel txn)
+
+Same as add, but SyncRecord.update.
+
+Future<void> deleteTransaction(String id)
+
+Deletes locally and enqueues SyncRecord.delete(id).
+
+Local Reads (Hive-only)
+Future<List<TransactionModel>> fetchAll()
+
+Returns all box values sorted by date desc.
+
+Stream<List<TransactionModel>> watchAll()
+
+Emits current snapshot + on every box change (for real-time UI).
+
+Future<List<TransactionModel>> searchByDescription(String query)
+
+Filters fetchAll() by description substring.
+
+Future<List<String>> recentDescriptions({int limit})
+
+Scans fetchAll() in date order, dedups descriptions, up to limit.
+
+Future<List<TransactionModel>> fetchByDateRange({start, end})
+
+Filters fetchAll() to the given date window.
+
+Future<Summary> getSummary({start, end})
+
+Totals expense vs income over optional date range.
+
+Future<Map<String,double>> getCategoryTotals({start, end})
+
+Sums amounts per categoryId over date range.
+
+Sync with Firestore
+Future<void> syncUpstream()
+
+Loops queued SyncRecords: for each
+• create/update → ref.set(..., merge: true)
+• delete → ref.delete()
+
+On success removes the record.
+
+Future<void> syncDownstream()
+
+Reads lastPulledAt from prefs.
+
+Queries Firestore for docs with updatedAt > lastPulledAt, orders by updatedAt.
+
+Merges each into _txnBox, then updates lastPulledAt.
+
+Future<void> synchronize()
+
+Calls syncUpstream() then syncDownstream().
+
+Future<void> initialSeed()
+
+If _txnBox empty: pages through all Firestore docs (100/page), writes them locally, sets lastPulledAt.
+
+Utility
+Future<void> clearAll()
+
+Clears _txnBox, _queueBox, and lastPulledAt in prefs.
+
+1.2 TransactionProvider (state/transaction_provider.dart)
+Variables
+List<TransactionModel> _transactions
+current in-memory list, updated via watchAll().
+
+bool _isLoading
+true during _initialize() (seed + initial sync).
+
+bool _isProcessing
+true while any single add/update/delete/clear operation runs.
+
+bool _isSyncing
+true when manually calling synchronize().
+
+String? _error
+holds last exception message (for UI error displays).
+
+StreamSubscription<List<TransactionModel>> _sub
+subscription to service.watchAll().
+
+Lifecycle
+_initialize() (called from ctor)
+
+_setLoading(true)
+
+await service.initialSeed()
+
+_sub = service.watchAll().listen(...)
+
+await synchronize()
+
+_setLoading(false)
+
+dispose()
+
+Cancels _sub.
+
+Public Methods
+Future<void> addTransaction(txn)
+
+_runProcessing(() async { service.addTransaction(txn); service.syncUpstream(); })
+
+Future<void> updateTransaction(txn)
+
+Same pattern with _runProcessing.
+
+Future<void> deleteTransaction(id)
+
+Ditto.
+
+Future<void> synchronize()
+
+_setSyncing(true) → service.syncUpstream(), then service.syncDownstream() → _setSyncing(false).
+
+Future<List<TransactionModel>> search(query)
+→ service.searchByDescription(query) with try/catch.
+
+Future<List<String>> recentDescriptions(limit)
+→ service.recentDescriptions(limit) with error handling.
+
+Future<List<TransactionModel>> fetchByDateRange(start, end)
+→ service.fetchByDateRange.
+
+Future<Summary> getSummary({start,end})
+→ service.getSummary with fallback Summary(0,0).
+
+Future<Map<String,double>> getCategoryTotals({start,end})
+→ service.getCategoryTotals.
+
+Future<void> clearAll()
+
+_runProcessing(() { service.clearAll(); _transactions=[]; }).
+
+Internals
+_runProcessing(Future fn())
+toggles _isProcessing, clears _error, runs fn, catches & sets _error, clears _isProcessing.
+
+_setLoading(bool), _setSyncing(bool) & _setError(Object)
+simple setters + notifyListeners.
+
+2. CATEGORIES
+2.1 CategoryService (services/category_service_impl.dart)
+State
+static const _kLastPulledKey
+
+Box<CategoryModel> _box
+
+FirebaseFirestore _firestore
+
+String _userId
+
+SharedPreferences _prefs
+
+Methods
+Future<void> seedDefaults()
+
+If Hive empty, writes a small hard-coded list of 5 stock categories.
+
+Future<void> initialSeed()
+
+If Hive empty, pulls all Firestore docs (.orderBy('name')) into Hive and sets lastPulledAt.
+
+Future<List<CategoryModel>> fetchAll()
+
+Local one-off read, sorted by name.
+
+Stream<List<CategoryModel>> watchAll()
+
+Hive-box stream + initial snapshot (via startWith).
+
+Future<CategoryModel?> getById(id)
+
+Future<List<CategoryModel>> fetchExpenses()
+
+filters fetchAll() by isExpense == true.
+
+Future<List<CategoryModel>> fetchIncome()
+
+isExpense == false.
+
+Future<List<CategoryModel>> searchByName(query)
+
+substring filter on name.
+
+Future<void> addCategory(cat)
+
+Hive put + Firestore set(merge: true).
+
+Future<void> updateCategory(cat)
+
+same as add.
+
+Future<void> deleteCategory(id)
+
+Hive delete + Firestore delete().
+
+Future<void> syncDownstream()
+
+Queries Firestore for updatedAt > lastPulledAt, merges into Hive, updates prefs.
+
+Future<void> synchronize()
+
+alias for syncDownstream.
+
+Future<void> clearAll()
+
+Hive clear() + prefs remove lastPulledAt.
+
+2.2 CategoryProvider (state/category_provider.dart)
+Variables
+List<CategoryModel> _categories
+
+bool _loading
+
+bool _processing
+
+bool _syncing
+
+String? _error
+
+StreamSubscription<List<CategoryModel>> _sub
+
+Lifecycle
+_initialize()
+• _setLoading(true)
+• await service.seedDefaults()
+• await service.initialSeed()
+• _sub = service.watchAll().listen(...)
+• _setLoading(false)
+
+dispose() → _sub.cancel()
+
+Public Methods
+addCategory(cat)
+
+updateCategory(cat)
+
+deleteCategory(id)
+
+All three wrap in _runProcessing.
+
+Future<CategoryModel?> getById(id)
+
+Future<List<CategoryModel>> fetchExpenses()
+
+Future<List<CategoryModel>> fetchIncome()
+
+Future<List<CategoryModel>> searchByName(query)
+
+Future<void> syncDownstream()
+toggles _isSyncing.
+
+Future<void> synchronize() → alias.
+
+Future<void> clearAll()
+resets _categories.
+
+Internals
+_runProcessing(), _setLoading(), _setSyncing(), _setError() same pattern as Transactions.
+
+3. TEMPLATES
+3.1 TemplateService (services/template_service_impl.dart)
+State
+Box<TemplateModel> _box
+
+FirebaseFirestore _firestore
+
+String _userId
+
+SharedPreferences _prefs
+
+_kLastPulledKey
+
+Methods
+Future<void> initialSeed()
+
+Hive empty → pull all remote docs sorted by nextRun, store locally, set lastPulledAt.
+
+Future<List<TemplateModel>> fetchAll()
+
+returns sorted by nextRun.
+
+Stream<List<TemplateModel>> watchAll()
+
+Future<TemplateModel?> getById(id)
+
+addTemplate(tpl), updateTemplate(tpl), deleteTemplate(id)
+
+Hive + Firestore set/delete (merge: true).
+
+Future<List<TemplateModel>> fetchDueTemplates({now})
+
+local filter: tpl.autoAdd && tpl.nextRun <= now.
+
+Future<void> bumpNextRun(tpl)
+
+calculates nextRun based on frequency: daily/weekly/monthly/custom → persists locally & remote.
+
+Future<void> syncDownstream()
+
+Firestore diffs by updatedAt, merge into Hive, update prefs.
+
+Future<void> synchronize() → alias.
+
+Future<void> clearAll()
+
+Helper
+_toFirestoreMap(tpl)
+serializes fields + serverTimestamp for updatedAt.
+
+3.2 TemplateProvider (state/template_provider.dart)
+Variables
+List<TemplateModel> _templates
+
+bool _isLoading, _isProcessing, _isSyncing
+
+String? _error
+
+StreamSubscription<List<TemplateModel>> _sub
+
+Lifecycle
+_initialize()
+
+_setLoading(true)
+
+await service.initialSeed()
+
+_sub = service.watchAll().listen(...)
+
+_setLoading(false)
+
+dispose() → _sub.cancel()
+
+Public Methods
+addTemplate(tpl), updateTemplate(tpl), deleteTemplate(id)
+via _runProcessing.
+
+Future<List<TemplateModel>> fetchDueTemplates({now})
+
+Future<void> bumpNextRun(tpl)
+
+Future<void> syncDownstream()
+toggles _isSyncing.
+
+Future<void> synchronize()
+
+Future<void> clearAll()
+
+Internals
+_runProcessing(), _setLoading(), _setSyncing(), _setError() as before.
+
