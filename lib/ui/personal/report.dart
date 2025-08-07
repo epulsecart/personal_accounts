@@ -1,6 +1,7 @@
 // lib/ui/personal/reports_view.dart
 
 import 'package:accounts/data/user_module/categories.dart';
+import 'package:accounts/data/user_module/transactions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../generated/l10n.dart';
@@ -23,7 +24,7 @@ class _ReportsViewState extends State<ReportsView> {
   late DateTime _start, _end;
   ReportType _type = ReportType.net;
   ReportRange _selectedRange = ReportRange.today;    // default
-
+  bool isDownloadingExcel = false;
 
   @override
   void initState() {
@@ -65,7 +66,46 @@ class _ReportsViewState extends State<ReportsView> {
       await _refresh();
     }
   }
-  late var bars   ;
+
+  void getDataForExcel()async{
+    setState(() {
+      isDownloadingExcel = true;
+    });
+    try {
+      final provider = context.read<TransactionProvider>();
+      final catProvider = context.read<CategoryProvider>();
+      List<TransactionModel> transactions = provider.transactions ;
+      List<CategoryModel> categories = catProvider.categories;
+      String date = "${_start.toString().substring(0,10)}-${_end.toString().substring(0,10)}";
+      List<Map> filteredDate = [];
+      for(final trans in transactions.where((tra)=> (tra.updatedAt?.isAfter(_start)??false) && (tra.updatedAt?.isBefore(_end)??false))){
+        String categoryName = '';
+        try {
+          final currentCar = categories.firstWhere((cat)=>cat.id == trans.categoryId);
+          categoryName= currentCar.name;
+        }catch(e){
+
+        }
+        filteredDate.add({
+          'date': trans.updatedAt,
+          'amount': trans.amount,
+          'desc': trans.description,
+          'category': categoryName,
+        });
+      }
+      Map data = {
+        'date': date,
+        'data' : filteredDate
+      };
+      await provider.downloadExcel(data);
+    }catch(e){
+     print (" iam not able to download excel $e");
+    }
+    setState(() {
+      isDownloadingExcel = false;
+    });
+  }
+  var bars   ;
   @override
   Widget build(BuildContext context) {
     final t      = S.of(context);
@@ -127,9 +167,26 @@ class _ReportsViewState extends State<ReportsView> {
           ),
 
           const SizedBox(height: 24),
+          ElevatedButton(onPressed:
+          isDownloadingExcel? (){}:
+              (){
+            getDataForExcel();
+          }, child:
+          isDownloadingExcel? Center(
+            child: CircularProgressIndicator(),
+          )
+          :
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(t.getexcel),
+              Icon(Icons.download)
+            ],
+          )),
+          const SizedBox(height: 24),
 
           // 3) Bars list or empty
-          if (bars.isEmpty)
+          if (bars == null || bars.isEmpty)
             Center(child: Text(t.noReportData, style: theme.textTheme.bodyMedium))
           else
             Expanded(
@@ -139,11 +196,15 @@ class _ReportsViewState extends State<ReportsView> {
                 itemBuilder: (ctx, i) {
                   final bar = bars[i];
                   // lookup category details from your CategoryProvider...
-                  CategoryModel cat = context.read<CategoryProvider>()
-                      .categories.firstWhere((cat)=>cat.id == bar.categoryId);
+                  CategoryModel? cat;
+                  try{cat= context.read<CategoryProvider>()
+                      .categories.firstWhere((cat)=>cat.id == bar.categoryId);}
+                  catch(e){
 
-                  final label = cat.name ?? t.noReportData;
-                  final color =  Color(cat.colorValue);
+                  }
+
+                  final label = cat?.name ?? t.noReportData;
+                  final color =  Color(cat?.colorValue??00000);
                   return _CategoryBar(
                     label:      label,
                     percent:    bar.percentage,

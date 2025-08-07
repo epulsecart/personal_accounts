@@ -86,9 +86,9 @@ class GroupTxnChangeRequestModel extends HiveObject {
     'newDescription': newDescription,
     'status': status.name,
     'approvedBy': approvedBy,
-    'requestedAt': Timestamp.fromDate(requestedAt),
+    'requestedAt': requestedAt,
     'respondedAt':
-    respondedAt != null ? Timestamp.fromDate(respondedAt!) : null,
+    respondedAt != null ? respondedAt! : null,
   };
 
   GroupTxnChangeRequestModel copyWith({

@@ -15,7 +15,9 @@ class GroupProvider extends ChangeNotifier {
   }
 
   // ─── State ────────────────────────────────────────────────────────────────
+  Map<String, sumarry.Summary> _groupSummary={};
 
+  Map<String, sumarry.Summary> get groupSummary => _groupSummary;
   List<GroupModel> _groups = [];
   List<GroupModel> get groups => _groups;
 
@@ -47,11 +49,15 @@ class GroupProvider extends ChangeNotifier {
       // 3) Kick off a first full sync
       await synchronize();
     } catch (e) {
+      print ("error in sync 50 $e");
       _setError(e);
     } finally {
       _setLoading(false);
     }
   }
+
+
+
 
   // ─── CRUD ─────────────────────────────────────────────────────────────────
 
@@ -76,8 +82,13 @@ class GroupProvider extends ChangeNotifier {
   // ─── Summaries & Helpers ─────────────────────────────────────────────────
 
   /// Total expense/income for _you_ in the given group.
-  Future<sumarry.Summary> getGroupSummary(String groupId) =>
-      _service.getGroupSummary(groupId);
+  Future<sumarry.Summary> getGroupSummary(String groupId) {
+    // final returnSummary =await  _service.getGroupSummary(groupId);
+    // _groupSummary[groupId] = returnSummary;
+    // print ("i have got group summary ")
+    // notifyListeners();
+    return  _service.getGroupSummary(groupId);
+  }
 
   /// Net balance per member in that group.
   Future<Map<String,double>> getMemberBalances(String groupId) =>
@@ -91,6 +102,7 @@ class GroupProvider extends ChangeNotifier {
       await _service.syncUpstream();
       await _service.syncDownstream();
     } catch (e) {
+      print ("error in sync 98 $e");
       _setError(e);
     } finally {
       _setProcessing(false);
@@ -121,6 +133,7 @@ class GroupProvider extends ChangeNotifier {
     try {
       await action();
     } catch (e) {
+      print ("error in runproccess 129 $e");
       _setError(e);
     } finally {
       _setProcessing(false);

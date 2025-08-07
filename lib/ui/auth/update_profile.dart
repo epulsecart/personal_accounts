@@ -18,7 +18,7 @@ class UpdateProfileScreen extends StatefulWidget {
 
 class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
+  late final TextEditingController _nameController;
   String? _phone;
   bool _isLoading = false;
 
@@ -27,7 +27,14 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     _nameController.dispose();
     super.dispose();
   }
-
+  @override
+  void initState() {
+    _nameController = TextEditingController();
+    _nameController.text = (context.read<AuthProvider>().user?.name??null)??'';
+    _phone= context.read<AuthProvider>().user?.phone??null;
+    // _nameController
+    super.initState();
+  }
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate() || _phone == null) return;
     setState(() => _isLoading = true);
@@ -115,6 +122,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                           // Name field
                           TextFormField(
                             controller: _nameController,
+                            // initialValue: context.read<AuthProvider>().user?.name??null,
                             decoration: InputDecoration(
                               labelText: t.fullName,
                               hintText: t.fullNameHint,
@@ -135,6 +143,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               labelText: t.phoneHint,
                               hintText: t.phoneHint,
                             ),
+                            initialValue: context.read<AuthProvider>().user?.phone??null,
                             onChanged: (phone) {
                               _phone = phone.completeNumber;
                             },

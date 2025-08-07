@@ -17,6 +17,9 @@ import '../services/auth_service.dart';
 enum AuthStatus { uninitialized, authenticating, authenticated, unauthenticated, codeSent }
 
 class AuthProvider extends ChangeNotifier {
+  final _statusNotifier = ValueNotifier<AuthStatus>(AuthStatus.uninitialized);
+  ValueNotifier<AuthStatus> get statusNotifier => _statusNotifier;
+
   final AuthService _authService;
   UserModel?    _user;
   AuthStatus    _status = AuthStatus.uninitialized;
@@ -38,57 +41,78 @@ class AuthProvider extends ChangeNotifier {
   UserModel? get user            => _user;
   AuthStatus get status          => _status;
   bool       get isAuthenticated => _status == AuthStatus.authenticated;
+  void _setStatus(AuthStatus status) {
+    if (_status != status){
+      _status = status;
+      _statusNotifier.value = status;
+      // notifyListeners(); // optional, for internal rebuilds only
+    }else{
+
+    }
+  }
 
   Future<void> _init() async {
     try {
       _user   = await _authService.getCurrentUser();
-      _status = AuthStatus.authenticated;
+      _setStatus(AuthStatus.authenticated);
       print("got the user data in provider");
     } catch (e) {
       print ("i can not load user data $e");
-      _status = AuthStatus.unauthenticated;
+      _setStatus(AuthStatus.unauthenticated);
+      // _status = AuthStatus.unauthenticated;
     }
-    notifyListeners();
+    // notifyListeners();
   }
 
   Future<void> signInWithEmail(String email, String password) async {
-    // _status = AuthStatus.authenticating;
+    // _status = ;
+    _setStatus(AuthStatus.authenticating);
     // notifyListeners();
 
     try {
       _user   = await _authService.signInWithEmail(email: email, password: password);
+      _setStatus(AuthStatus.authenticated);
+
       _status = AuthStatus.authenticated;
     } catch (e) {
+      _setStatus(AuthStatus.unauthenticated);
       _status = AuthStatus.unauthenticated;
       rethrow;
     }
 
-    notifyListeners();
+    // notifyListeners();
   }
 
   Future<void> signUpWithEmail( String email, String password) async {
+    _setStatus(AuthStatus.authenticating);
     // _status = AuthStatus.authenticating;
     // notifyListeners();
-
     try {
       _user   = await _authService.signUpWithEmail( email: email, password: password);
+      _setStatus(AuthStatus.authenticated);
       _status = AuthStatus.authenticated;
     } catch (e) {
+      _setStatus(AuthStatus.unauthenticated);
       _status = AuthStatus.unauthenticated;
       rethrow;
     }
 
-    notifyListeners();
+    // notifyListeners();
   }
 
   Future<void> signInAnonymously() async {
-    // _status = AuthStatus.authenticating;
-    // notifyListeners();
+    _status = AuthStatus.authenticating;
+    _setStatus(AuthStatus.authenticating);
+
+    notifyListeners();
 
     try {
       _user   = await _authService.signInAnonymously();
       _status = AuthStatus.authenticated;
+      _setStatus(AuthStatus.authenticated);
+
     } catch (e) {
+      _setStatus(AuthStatus.unauthenticated);
       _status = AuthStatus.unauthenticated;
       rethrow;
     }
@@ -97,29 +121,34 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> signInWithGoogle() async {
-    // _status = AuthStatus.authenticating;
-    // notifyListeners();
+    _status = AuthStatus.authenticating;
+    notifyListeners();
+    _setStatus(AuthStatus.authenticating);
 
     try {
       _user   = await _authService.signInWithGoogle();
+      _setStatus(AuthStatus.authenticated);
       _status = AuthStatus.authenticated;
       print ("done user registered");
     } catch (e) {
       print ("nope user is not registered $e");
+      _setStatus(AuthStatus.unauthenticated);
       _status = AuthStatus.unauthenticated;
       rethrow;
     }
 
     notifyListeners();
   }
+
   Future<void> startPhoneVerification(String phone) async {
     // _status = AuthStatus.authenticating;
+    // _setStatus(AuthStatus.authenticating);
     _phoneForVerification = phone;
     _isResendEnabled = false;
     _resendCountdown = 60;
     _resendTimer?.cancel();
-    notifyListeners();
-
+    _setStatus(AuthStatus.codeSent);
+    // notifyListeners();
     await _authService.verifyPhoneNumber(
       phone: phone,
       forceResendingToken: _resendToken,
@@ -136,8 +165,10 @@ class AuthProvider extends ChangeNotifier {
           );
           _user   = model;
           _status = AuthStatus.authenticated;
+          _setStatus(AuthStatus.authenticated);
         } catch (e) {
           _status = AuthStatus.unauthenticated;
+          _setStatus(AuthStatus.unauthenticated);
         }
         notifyListeners();
       },
@@ -145,14 +176,16 @@ class AuthProvider extends ChangeNotifier {
       // عند فشل التحقق
       verificationFailed: (FirebaseAuthException e) {
         _status = AuthStatus.unauthenticated;
-        notifyListeners();
+        _setStatus(AuthStatus.unauthenticated);
+        // notifyListeners();
       },
 
       // عند إرسال الكود بنجاح
       codeSent: (String verId, int? token) {
         _verificationId = verId;
         _resendToken    = token;
-        // _status         = AuthStatus.codeSent;
+        _status         = AuthStatus.codeSent;
+        _setStatus(AuthStatus.codeSent);
         _startResendTimer();
         notifyListeners();
       },
@@ -172,6 +205,7 @@ class AuthProvider extends ChangeNotifier {
     }
     // _status = AuthStatus.authenticating;
     // notifyListeners();
+    _setStatus(AuthStatus.authenticating);
 
     try {
       _user   = await _authService.signInWithPhone(
@@ -179,9 +213,12 @@ class AuthProvider extends ChangeNotifier {
         verificationId: _verificationId!,
         smsCode: smsCode,
       );
-      _status = AuthStatus.authenticated;
+      // _status = AuthStatus.authenticated;
+      _setStatus(AuthStatus.authenticated);
     } catch (e) {
       _status = AuthStatus.unauthenticated;
+      _setStatus(AuthStatus.unauthenticated);
+      print ("isssue can not auth $e");
       rethrow;
     }
 
@@ -204,11 +241,17 @@ class AuthProvider extends ChangeNotifier {
     _isResendEnabled = false;
     _resendTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       _resendCountdown--;
-      if (_resendCountdown <= 0) {
-        _isResendEnabled = true;
+      if (_status == AuthStatus.authenticated){
         timer.cancel();
       }
-      notifyListeners();
+      else if (_resendCountdown <= 0 ) {
+        _isResendEnabled = true;
+        timer.cancel();
+        _status = AuthStatus.codeSent;
+        _setStatus(AuthStatus.codeSent);
+        notifyListeners();
+      }
+      //
     });
   }
 
@@ -239,13 +282,13 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> signOut() async {
+    _setStatus(AuthStatus.unauthenticated);
     await _authService.signOut();
     _user   = null;
     _status = AuthStatus.unauthenticated;
-    await Hive.box<TransactionModel>('transactions').clear();
-    await Hive.box<SyncRecord    >('sync_queue').clear();
-    await Hive.box<CategoryModel >('categories').clear();
-    await Hive.box<TemplateModel >('templates').clear();
+    notifyListeners();
+
+   await clearHive();
     final pref=  await SharedPreferences.getInstance();
     pref.clear();
     notifyListeners();
@@ -334,5 +377,6 @@ class AuthProvider extends ChangeNotifier {
       );
       // pull back fresh copy
       _user = await _authService.getCurrentUser();
+      notifyListeners();
   }
 }

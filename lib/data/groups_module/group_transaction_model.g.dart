@@ -31,6 +31,8 @@ class GroupTransactionModelAdapter extends TypeAdapter<GroupTransactionModel> {
       createdAt: fields[11] as DateTime,
       updatedAt: fields[12] as DateTime,
       isDeleted: fields[13] as bool,
+      payerName: fields[14]??'',
+      receiverName: fields[15]??'',
     );
   }
 
@@ -65,7 +67,11 @@ class GroupTransactionModelAdapter extends TypeAdapter<GroupTransactionModel> {
       ..writeByte(12)
       ..write(obj.updatedAt)
       ..writeByte(13)
-      ..write(obj.isDeleted);
+      ..write(obj.isDeleted)
+        ..writeByte(14)
+      ..write(obj.payerName)
+      ..writeByte(15)
+      ..write(obj.receiverName);
   }
 
   @override

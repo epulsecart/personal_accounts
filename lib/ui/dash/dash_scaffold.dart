@@ -1,10 +1,12 @@
+import 'package:accounts/state/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../generated/l10n.dart';
 import '../../state/intersets_provider.dart';
-import '../group /home.dart';
+import '../group/home.dart';
 import '../personal/home.dart';
 import '../projects/home.dart';
 
@@ -27,8 +29,9 @@ class _DashboardScaffoldState extends State<DashboardScaffold> {
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_){
+    WidgetsBinding.instance.addPostFrameCallback((_)async{
       context.read<InterestProvider>().loadInterests();
+      if (!context.read<AuthProvider>().isAuthenticated) context.go('/splash');
     });
     super.initState();
   }

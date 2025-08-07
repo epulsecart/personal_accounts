@@ -20,11 +20,14 @@ class GroupModelAdapter extends TypeAdapter<GroupModel> {
       id: fields[0] as String,
       name: fields[1] as String,
       createdBy: fields[2] as String,
-      memberIds: (fields[3] as List).cast<String>(),
-      joinCode: fields[4] as String,
+      memberIds: (fields[3] as List)
+          .map((e) => Map<String, String>.from(e as Map))
+          .toList(),
+      joinCode: fields[4] as Uint8List?,
       createdAt: fields[5] as DateTime,
       updatedAt: fields[6] as DateTime,
       description: fields[7] as String?,
+      memberUids:  fields[8] as List<String>?,
     );
   }
 
@@ -47,7 +50,10 @@ class GroupModelAdapter extends TypeAdapter<GroupModel> {
       ..writeByte(6)
       ..write(obj.updatedAt)
       ..writeByte(7)
-      ..write(obj.description);
+      ..write(obj.description)
+    ..writeByte(8)
+    ..write(obj.memberUids)
+    ;
   }
 
   @override

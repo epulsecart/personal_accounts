@@ -39,6 +39,7 @@ class GroupJoinRequestProvider extends ChangeNotifier {
       // 1) Seed local Hive if empty
       await _service.initialSeed();
       // 2) Subscribe to local box changes for this group
+      if (groupId.isNotEmpty)
       _subscription = _service
           .watchAllForGroup(groupId)
           .listen((list) {

@@ -52,11 +52,11 @@ class TransactionModel extends HiveObject {
   Map<String, dynamic> toFirestoreMap() => {
     'description': description,
     'amount': amount,
-    'date': Timestamp.fromDate(date),
+    'date': date,
     'isExpense': isExpense,
     if (attachment != null) 'attachment': attachment,
     if (categoryId != null) 'categoryId': categoryId,
-    'updatedAt': FieldValue.serverTimestamp(),
+    'updatedAt': DateTime.now(),
   };
 
 }

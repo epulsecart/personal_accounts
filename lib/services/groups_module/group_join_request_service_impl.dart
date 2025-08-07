@@ -36,16 +36,20 @@ class GroupJoinRequestServiceImpl implements GroupJoinRequestService {
 
   @override
   Future<void> createRequest(GroupJoinRequestModel req) async {
-    await _box.put(req.id, req);
-
-    // enqueue mutation using the sub-collection path as the “domain”
-    final mut = OfflineMutation(
-      collection:   'groups/${req.groupId}/joinRequests',
-      docId: req.id,
-      operation: MutationOp.create,
-      data:      req.toMap(),
-    );
-    await _mutBox.add(mut);
+   try {
+     await _box.put(req.id, req);
+     // enqueue mutation using the sub-collection path as the “domain”
+     final mut = OfflineMutation(
+       collection:   'groups/${req.groupId}/joinRequests',
+       docId: req.id,
+       operation: MutationOp.create,
+       data:      req.toMap(),
+     );
+     await _mutBox.add(mut);
+     synchronize();
+   }catch(e){
+     print ("can not join issue is there $e");
+   }
   }
 
   @override
@@ -159,11 +163,17 @@ class GroupJoinRequestServiceImpl implements GroupJoinRequestService {
 
   @override
   Future<void> syncUpstream() async {
-    for (final m in _mutBox.values.where((m) => m.docId.startsWith('groups/'))) {
+    print ("sync start");
+    for (final m in _mutBox.values.where((m) => m.collection.startsWith('groups/'))) {
+      if (m.docId.isEmpty){
+        m.delete();
+        continue;
+      }
       final parts = m.collection.split('/');
       // domain == "groups/{groupId}/joinRequests"
       final groupId = parts[1];
       final ref = _joinCol(groupId).doc(m.docId);
+      print ("ref is ${ref.path}");
       try {
         switch (m.operation) {
           case MutationOp.create:
@@ -175,7 +185,8 @@ class GroupJoinRequestServiceImpl implements GroupJoinRequestService {
             break;
         }
         await m.delete();
-      } catch (_) {
+      } catch (e) {
+        print ("issue in sync $e");
         // leave in queue
       }
     }

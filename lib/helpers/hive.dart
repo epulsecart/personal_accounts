@@ -68,3 +68,19 @@ Future<void> initializeHive() async {
   // TODO: Register Hive adapters here
   // Hive.registerAdapter(UserModelAdapter());
 }
+Future<void> clearHive ()async{
+ try {
+   await Hive.box<TransactionModel>('transactions').clear();
+   await Hive.box<SyncRecord>('sync_queue').clear();
+   await Hive.box<CategoryModel>('categories').clear();
+   await Hive.box<TemplateModel>('templates').clear();
+   await Hive.box<OfflineMutation>('mutation_queue').clear();
+   await Hive.box<GroupModel>('groups').clear();
+   await Hive.box<GroupTransactionModel>('group_transactions').clear();
+   await Hive.box<GroupJoinRequestModel>('group_join_requests').clear();
+   await Hive.box<GroupTxnChangeRequestModel>('group_txn_changes').clear();
+   await Hive.box<SettlementRequestModel>('settlement_requests').clear();
+ }catch(e){
+   print ("can not clear hive $e");
+ }
+}

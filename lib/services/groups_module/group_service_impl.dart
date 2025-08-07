@@ -43,18 +43,24 @@ class GroupServiceImpl implements GroupService {
   Future<void> createGroup(GroupModel group) async {
     await _groupBox.put(group.id, group);
     final m = OfflineMutation.create(
-      collection: 'users/$_userId/groups',
+      collection: 'groups',
       docId:      group.id,
       data:       group.toMap(),
     );
-    await _queueBox.add(m);
+    try {
+      print ("tomaoe here is ${group.toMap()}");
+      await _queueBox.add(m);
+
+    }catch(e){
+      print ("error puting the m in the queu box $e");
+    }
   }
 
   @override
   Future<void> updateGroup(GroupModel group) async {
     await _groupBox.put(group.id, group);
     final m = OfflineMutation.update(
-      collection: 'users/$_userId/groups',
+      collection: 'groups',
       docId:      group.id,
       data:       group.toMap(),
     );
@@ -63,12 +69,17 @@ class GroupServiceImpl implements GroupService {
 
   @override
   Future<void> deleteGroup(String groupId) async {
-    await _groupBox.delete(groupId);
-    final m = OfflineMutation.delete(
-      collection: 'users/$_userId/groups',
-      docId:      groupId,
-    );
-    await _queueBox.add(m);
+    final currentGroup =  _groupBox.get(groupId);
+    if(currentGroup!=null && currentGroup.createdBy == _userId) {
+      await _groupBox.delete(groupId);
+      final m = OfflineMutation.delete(
+        collection: 'users/$_userId/groups',
+        docId: groupId,
+      );
+      await _queueBox.add(m);
+    }else {
+      throw "can not delete group that is not created by you, ask the creator to do so";
+    }
   }
 
   // ─── Local reads from Hive ────────────────────────────────────────────────
@@ -156,7 +167,8 @@ class GroupServiceImpl implements GroupService {
             break;
         }
         await m.delete();
-      } catch (_) {
+      } catch (e) {
+        print (" iam not anle to sync$e");
         // leave in queue
       }
     }
@@ -166,12 +178,20 @@ class GroupServiceImpl implements GroupService {
   Future<void> syncDownstream() async {
     final last = DateTime.tryParse(_prefs.getString(_kLastPulledKey) ?? '')
         ?? DateTime.fromMillisecondsSinceEpoch(0);
+    print (" iwill now get down streams $last");
+    print (" iwill now get down streams 1 ${DateTime.tryParse(_prefs.getString(_kLastPulledKey) ?? '')}");
+    print (" iwill now get down streams 2${DateTime.fromMillisecondsSinceEpoch(0)}");
+    var tempDate = DateTime.fromMillisecondsSinceEpoch(0);
+    _groupBox.values.forEach((v){
+      tempDate.compareTo(v.updatedAt) == -1? tempDate = v.updatedAt : tempDate = tempDate;
+    });
+    print ("tempDate = $tempDate");
     final snap = await _firestore
-        .collection('users/$_userId/groups')
-        .where('updatedAt', isGreaterThan: last)
+        .collection('groups')
+        .where('memberUids', arrayContains: _userId)
+        .where('updatedAt', isGreaterThan: tempDate)
         .orderBy('updatedAt')
         .get();
-
     for (var doc in snap.docs) {
       final g = GroupModel.fromFirestore(doc);
       await _groupBox.put(g.id, g);
@@ -185,14 +205,15 @@ class GroupServiceImpl implements GroupService {
     const batchSize = 100;
     String? lastId;
     Query q = _firestore
-        .collection('users/$_userId/groups')
+        .collection('groups')
+        .where('memberIds', arrayContains: _userId)
         .orderBy('createdAt')
         .limit(batchSize);
 
     while (true) {
       if (lastId != null) {
         final lastDoc = await _firestore
-            .collection('users/$_userId/groups')
+            .collection('groups')
             .doc(lastId)
             .get();
         q = q.startAfterDocument(lastDoc);
@@ -200,7 +221,7 @@ class GroupServiceImpl implements GroupService {
       final snap = await q.get();
       if (snap.docs.isEmpty) break;
       for (var doc in snap.docs) {
-        final g = GroupModel.fromFirestore(doc);
+        final g = GroupModel.fromFirestore(doc );
         await _groupBox.put(g.id, g);
       }
       lastId = snap.docs.last.id;
@@ -211,6 +232,7 @@ class GroupServiceImpl implements GroupService {
 
   @override
   Future<void> synchronize() async {
+    print ("i will now sync");
     await syncUpstream();
     await syncDownstream();
   }

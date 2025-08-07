@@ -24,6 +24,8 @@ class ModuleScaffold extends StatefulWidget {
   final VoidCallback onAddPressed;
   final TextEditingController searchController;
   final FocusNode searchFocusNode;
+  final VoidCallback getExcel;
+
 
   const ModuleScaffold({
     required this.tabs,
@@ -36,6 +38,7 @@ class ModuleScaffold extends StatefulWidget {
     required this.onAddPressed,
     required this.searchController,
     required this.searchFocusNode,
+    required this.getExcel,
     super.key,
   }) : assert(tabs.length == tabViews.length, 'tabs & views must match');
 
@@ -71,6 +74,7 @@ class _ModuleScaffoldState extends State<ModuleScaffold>
       body: CustomScrollView(
         slivers: [
           DashboardHeader(
+            getExcel: widget.getExcel,
             spent: widget.spentAmount,
             income: widget.incomeAmount,
             controller: widget.searchController,

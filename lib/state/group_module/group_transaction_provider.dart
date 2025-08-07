@@ -1,8 +1,12 @@
 // lib/state/groups_module/group_transaction_provider.dart
 
 import 'dart:async';
+import 'dart:io';
 
+import 'package:excel/excel.dart';
 import 'package:flutter/foundation.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../data/groups_module/group_transaction_model.dart';
 import '../../services/groups_module/group_transaction_service.dart';
@@ -42,7 +46,6 @@ class GroupTransactionProvider extends ChangeNotifier {
 
   String? _error;
   String? get error => _error;
-
   sumarry.Summary _summary = sumarry.Summary(totalExpense: 0, totalIncome: 0);
   sumarry.Summary get summary => _summary;
 
@@ -77,6 +80,41 @@ class GroupTransactionProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> downloadExcel(Map data)async{
+    try{
+      if (data.isEmpty) return;
+      final excel = Excel.createExcel();
+      final headers = <String>{};
+      headers.addAll({'التاريخ', 'المبلغ', 'البيان', 'من', 'الى','الحالة'});
+      final headerList = headers.toList();
+      final sheet = excel[data['name']];
+      // header row
+      sheet.appendRow(headerList.map((h) => TextCellValue(h)).toList());
+      for (var data in data['data']) {
+        final row = <TextCellValue>[];
+        row.add(TextCellValue(data['date'].toString()));
+        row.add(TextCellValue(data['amount'].toString()));
+        row.add(TextCellValue(data['desc']));
+        row.add(TextCellValue(data['from']));
+        row.add(TextCellValue(data['to']));
+        row.add(TextCellValue(data['status']));
+        sheet.appendRow(row);
+      }
+
+      final bytes = excel.encode();
+      final dir = await getTemporaryDirectory();
+      final file = File('${dir.path}/assignments_export.xlsx')
+        ..writeAsBytesSync(bytes!);
+      await OpenFilex.open(file.path);
+
+      // await file.open();
+    }
+    catch(e){
+      print ("in provider $e");
+    }
+  }
+
+
   // ─── Add / Sync ───────────────────────────────────────────────────────────
 
   /// Add a new transaction (local + enqueue), then push & recompute.
@@ -88,6 +126,12 @@ class GroupTransactionProvider extends ChangeNotifier {
           groupId: _groupId,
           userId: _userId,
         );
+      });
+
+  Future<void> approveTransaction(String txnId) =>
+      _runProcessing(() async {
+        await _service.approveTransaction(txnId);
+        await _service.synchronize(_groupId);
       });
 
   /// Push any local changes and pull any remote diffs.
@@ -115,10 +159,10 @@ class GroupTransactionProvider extends ChangeNotifier {
       );
 
   /// Compute expense vs income for this user in the group.
-  Future<sumarry.Summary> getSummary({DateTime? start, DateTime? end}) =>
+  Future<sumarry.Summary> getSummary({DateTime? start, DateTime? end, String? userId}) =>
       _service.getSummary(
         groupId: _groupId,
-        userId: _userId,
+        userId: userId?? _userId,
         start: start,
         end: end,
       );

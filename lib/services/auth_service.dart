@@ -53,7 +53,11 @@ class AuthService {
     final uid    = firebaseUser.uid;
     final docRef = _firestore.collection('users').doc(uid);
     final now    = DateTime.now();
-    final token  = await _messaging.getToken();
+    String token  ='';
+    try {await _messaging.getToken();}
+    catch (e){
+      print("issue in getting user token $e");
+    }
 
     final data = <String, dynamic>{
       'fcmToken':    token,
@@ -62,6 +66,8 @@ class AuthService {
     if (name  != null) data['name']  = name;
     if (email != null) data['email'] = email;
     if (phone != null) data['phone'] = phone;
+
+    data['loginMethod'] = method.name;
 
     final snapshot = await docRef.get();
     if (snapshot.exists) {
@@ -123,6 +129,7 @@ class AuthService {
     UserModel? resultt  = await _ensureUnique(email: email, password: password);
     if (resultt!=null) return resultt;
     // لو مجهول، نربط فقط
+    print ("current is ${current?.uid.toString()} and type is ${current?.isAnonymous}");
     if (current != null && current.isAnonymous) {
       final cred = EmailAuthProvider.credential(email: email, password: password);
       final linkResult = await current.linkWithCredential(cred);
@@ -132,15 +139,22 @@ class AuthService {
       );
     }
     // خلاف ذلك، ننشئ مستخدم جديد
+    try {
     final result = await _auth.createUserWithEmailAndPassword(
-        email: email, password: password).catchError((e){
-          print ("can not sign up with the email $e");
-          throw e;
-    });
+        email: email, password: password);
     return _createOrFetchUserDoc(
       result.user!, LoginMethod.email,
-       email: email,
+      email: email,
     );
+
+    }catch(e){
+      if (e.toString().contains('The email address is already in use by another account')){
+        return signInWithEmail(email: email, password: password);
+      }else {
+        throw e;
+      }
+    }
+
   }
 
   /// تسجيل الدخول عبر Email (أو الربط لو كان مجهول)
@@ -151,14 +165,24 @@ class AuthService {
   async {
     final current = _auth.currentUser;
     final cred = EmailAuthProvider.credential(email: email, password: password);
-
+    print("current is ${current?.uid} and type is ${current?.isAnonymous}");
     if (current != null && current.isAnonymous) {
-      // await _ensureUnique(email: email);
-      final linkResult = await current.linkWithCredential(cred);
-      return _createOrFetchUserDoc(
-        linkResult.user!, LoginMethod.email,
-        email: email,
-      );
+      try {
+        final linkResult = await current.linkWithCredential(cred);
+        print("link is ${linkResult.user?.uid}");
+        return _createOrFetchUserDoc(
+          linkResult.user!, LoginMethod.email,
+          email: email,
+        );
+      } on FirebaseAuthException catch(e){
+        if (e.code == 'email-already-in-use'){
+          final result = await _auth.signInWithCredential(cred);
+          // await current.delete();
+          return _createOrFetchUserDoc(
+            result.user!, LoginMethod.email,
+          );
+        }
+      }
     }
     final result = await _auth.signInWithCredential(cred);
     return _createOrFetchUserDoc(
@@ -278,6 +302,14 @@ class AuthService {
     final user = _auth.currentUser;
     if (user == null) throw Exception('Not authenticated');
     final doc = await _firestore.collection('users').doc(user.uid).get();
+    if (doc.exists){
+      String? token = await _messaging.getToken() ;
+      if (token !=null ){
+        _firestore.collection('users').doc(user.uid).update({
+          "fcmToken": token
+        });
+      }
+    }
     return UserModel.fromFirestore(doc);
   }
 
@@ -326,7 +358,8 @@ class AuthService {
     required String name,
     required String uid,
     required String phone,
-  }) async {
+  })
+  async {
     // ensure no other user has this phone
     await _ensureUnique(phone: phone);
     // write only the two fields

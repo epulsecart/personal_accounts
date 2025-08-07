@@ -1,11 +1,16 @@
 // lib/state/transaction_provider.dart
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:excel/excel.dart';
+import 'package:open_filex/open_filex.dart';
 
 import '../../data/user_module/transactions.dart';
 import '../../services/user_module/transactions_service.dart';
+
 
 /// Exposes all transaction data + sync operations to the UI.
 
@@ -72,6 +77,39 @@ class TransactionProvider extends ChangeNotifier {
       _setError(e);
     } finally {
       _setLoading(false);
+    }
+  }
+
+
+  Future<void> downloadExcel(Map data)async{
+    try{
+      if (data.isEmpty) return;
+      final excel = Excel.createExcel();
+      final headers = <String>{};
+      headers.addAll({'التاريخ', 'المبلغ', 'البيان', 'التصنيف'});
+      final headerList = headers.toList();
+      final sheet = excel[data['date']];
+      // header row
+      sheet.appendRow(headerList.map((h) => TextCellValue(h)).toList());
+      for (var data in data['data']) {
+        final row = <TextCellValue>[];
+        row.add(TextCellValue(data['date'].toString()));
+        row.add(TextCellValue(data['amount'].toString()));
+        row.add(TextCellValue(data['desc']));
+        row.add(TextCellValue(data['category']));
+        sheet.appendRow(row);
+      }
+
+      final bytes = excel.encode();
+      final dir = await getTemporaryDirectory();
+      final file = File('${dir.path}/assignments_export.xlsx')
+        ..writeAsBytesSync(bytes!);
+      await OpenFilex.open(file.path);
+
+      // await file.open();
+    }
+    catch(e){
+      print ("in provider $e");
     }
   }
 

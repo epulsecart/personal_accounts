@@ -10,7 +10,9 @@ const _prefFirstTime = 'is_first_time';
 /// يعيد اسم الـ route الذي يبدأ عنده التطبيق:
 /// '/splash' لأول مرة، '/' للمستخدمين المسجلين، '/login' للزوار
 Future<String> determineStartRoute(prefs) async {
-  await initializeFirebase();
+  await initializeFirebase(
+
+  );
   await initializeHive();
   await initializeNotifications();
   final isFirst = prefs.getBool(_prefFirstTime) ?? true;

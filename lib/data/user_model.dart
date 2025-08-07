@@ -73,8 +73,8 @@ class UserModel {
     'phone':               phone,
     'loginMethod':         loginMethod.name,
     'fcmToken':            fcmToken,
-    'createdAt':           Timestamp.fromDate(createdAt),
-    'lastLoginAt':         Timestamp.fromDate(lastLoginAt),
+    'createdAt':           createdAt,
+    'lastLoginAt':         lastLoginAt,
     'platform':            platform,
     'interests':           interests,
     // ─────────────── Export new fields ───────────────

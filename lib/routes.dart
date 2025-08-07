@@ -2,14 +2,13 @@ import 'package:accounts/data/groups_module/group_model.dart';
 import 'package:accounts/services/groups_module/group_join_request_service_impl.dart';
 import 'package:accounts/services/groups_module/group_service_impl.dart';
 import 'package:accounts/services/groups_module/group_transaction_service_impl.dart';
-import 'package:accounts/services/groups_module/group_txn_change_request_service_impl.dart';
 import 'package:accounts/services/groups_module/settlement_request_service_impl.dart';
 import 'package:accounts/state/group_module/group_join_request_provider.dart';
 import 'package:accounts/state/group_module/group_provider.dart';
 import 'package:accounts/state/group_module/group_transaction_provider.dart';
-import 'package:accounts/state/group_module/group_txn_change_request_provider.dart';
 import 'package:accounts/state/group_module/settlement_request_provider.dart';
-import 'package:accounts/ui/group%20/group_details.dart';
+import 'package:accounts/ui/auth/update_profile.dart';
+import 'package:accounts/ui/group/group_details.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -35,7 +34,6 @@ import '../data/user_module/transactions.dart';
 import '../data/user_module/sync_record.dart';
 import 'data/groups_module/group_join_request_model.dart';
 import 'data/groups_module/group_transaction_model.dart';
-import 'data/groups_module/group_txn_change_request_model.dart';
 import 'data/groups_module/settlement_request_model.dart';
 import 'data/offline_mutation.dart';
 
@@ -48,31 +46,37 @@ class AppRouter {
     return GoRouter(
       initialLocation: initialRoute,
       // when AuthProvider.notifies, re-run redirect:
-      refreshListenable: authProvider,
+      refreshListenable: authProvider.statusNotifier,
       redirect: (context, state) {
-        final status   = authProvider.status;
-        final loc      = state.uri.toString();
 
+        final status   = authProvider.statusNotifier.value;
+        final loc      = state.uri.toString();
+        print ("calling the redirect now is ${status.name}");
         // 1) If you're fully authenticated...
         if (status == AuthStatus.authenticated) {
           // ...and you're on /login or /splash, send you to home
           if (loc.startsWith('/login') || loc == '/splash') {
+            print ("now going home");
             return '/';
           }
           // otherwise, let you stay where you are
           return null;
         }
-
         // 2) If you're in the middle of authenticating (email, Google, phone)—
         //    do NOT redirect you. Let you stay on /login so you can see errors.
-        if (status == AuthStatus.authenticating || status == AuthStatus.codeSent) {
-          print ("now authentiaction");
+        if (status == AuthStatus.codeSent && loc != '/login/phone'){
+          print ("i am sending code $loc");
+          return '/login/phone';
+        }
+        if (status == AuthStatus.authenticating || status == AuthStatus.unauthenticated) {
+          print ("now authentiaction $loc");
           return null;
         }
 
         // 3) If you're still uninitialized (first app launch),
         //    let the initialRoute logic handle whether you go to /splash.
         if (status == AuthStatus.uninitialized) {
+          print("now going to splash ");
           return '/splash';
         }
 
@@ -99,14 +103,17 @@ class AppRouter {
               path: 'phone',
               builder: (ctx, st) => const PhoneAuthScreen(),
             ),
+
           ],
         ),
 
         // Authenticated shell:
+        // if (authProvider.user!=null)
         ShellRoute(
           builder: (context, state, child) {
             // once authed, scope all your feature providers here:
-            final uid = authProvider.user!.uid;
+
+            final uid = authProvider.user?.uid??'';
             return MultiProvider(
               providers: [
                 ChangeNotifierProvider<TransactionProvider>(
@@ -156,7 +163,15 @@ class AppRouter {
                     ),
                   ),
                 ),
-
+                ChangeNotifierProvider(
+                  create: (_) => GroupJoinRequestProvider(
+                    service: GroupJoinRequestServiceImpl(
+                      box:     Hive.box<GroupJoinRequestModel>('group_join_requests'),
+                      mutBox:  Hive.box<OfflineMutation>('mutation_queue'),
+                    ),
+                    groupId: '',
+                  ),
+                ),
               ],
               child: child,
             );
@@ -173,6 +188,10 @@ class AppRouter {
                   builder: (ctx, st) => const SettingsScreen(),
                 ),
               ],
+            ),
+            GoRoute(
+              path: '/editProfile',
+              builder: (ctx, st) => const UpdateProfileScreen(),
             ),
             /// groups module routes:
             GoRoute(
@@ -202,16 +221,6 @@ class AppRouter {
                           mutBox:  Hive.box<OfflineMutation>('mutation_queue'),
                         ),
                         groupId: groupId,
-                      ),
-                    ),
-                    ChangeNotifierProvider(
-                      create: (_) => GroupTxnChangeRequestProvider(
-                         GroupTxnChangeRequestServiceImpl(
-                          groupId: groupId,
-                          txnId:  txnId,
-                          box:     Hive.box<GroupTxnChangeRequestModel>('group_txn_changes'),
-                          queueBox: Hive.box<OfflineMutation>('mutation_queue'),
-                        ),
                       ),
                     ),
                     // …and any other per-group providers

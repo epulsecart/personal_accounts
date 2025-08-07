@@ -189,19 +189,15 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
       await prov.addTransaction(txn);
       // success feedback
       if (!mounted) return;
-       showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (_) => Center(
-          child: Icon(Icons.check_circle, size: 80, color: Colors.green),
-        ),
-      );
-      Future.delayed(const Duration(seconds: 2), () {
-        // First pop the success dialog
-        Navigator.of(context).pop();
-        // Then pop the bottom sheet
-        Navigator.of(context).pop();
-      });
+      //  showDialog(
+      //   context: context,
+      //   barrierDismissible: false,
+      //   builder: (_) => Center(
+      //     child: Icon(Icons.check_circle, size: 80, color: Colors.green),
+      //   ),
+      // );
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(S.of(context).transactionCreated)));
     } catch (e) {
       setState(() => _error = e.toString());
     } finally {
@@ -394,6 +390,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                       );
                     }).toList(),
                   ),
+                    Text(locale.selectOrAddCategory,),
                   Row(children: [
                     Expanded(
                       child: TextField(
@@ -401,7 +398,13 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                         decoration: InputDecoration(
                           hintText: locale.newCategoryHint,
                           suffixIcon: IconButton(
-                            icon: Icon(Icons.add_circle),
+                            icon: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(locale.tapHere, style: TextStyle(fontSize: 12),),
+                                Icon(Icons.add_circle, color: Colors.green),
+                              ],
+                            ),
                             onPressed: _isSaving || _isUploadingFile
                                 ? null
                                 : _createNewCategory,

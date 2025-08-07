@@ -6,6 +6,8 @@ import 'package:flutter/foundation.dart'
 
 
 Future<void> initializeFirebase() async {
+  // if (defaultTargetPlatform == TargetPlatform.iOS ) await Firebase.initializeApp();
+  // else
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
     name: 'accounts'
@@ -47,7 +49,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: "AIzaSyChpIOZ937K4uUHipuUoxl5JBiyPmiIx_g",
-    appId: 'YOUR_IOS_APP_ID',
+    appId: '1:379065992155:ios:edadb67b099348f6639dfe',
     messagingSenderId: '379065992155',
     projectId: 'accounts-9b899',
     storageBucket: 'accounts-9b899.firebasestorage.app',

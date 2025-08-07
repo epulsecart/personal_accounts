@@ -44,6 +44,7 @@ class CategoryProvider extends ChangeNotifier {
       // 2) Pull remote into Hive if empty
       await _service.initialSeed();
       // 3) Subscribe to local Hive changes
+      await synchronize() ;
       _subscription = _service.watchAll().listen((list) {
         _categories = list;
         notifyListeners();

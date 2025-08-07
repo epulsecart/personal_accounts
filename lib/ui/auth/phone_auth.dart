@@ -27,9 +27,10 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
 
   @override
   void dispose() {
-    _smsController.dispose();
+    if(mounted) _smsController.dispose();
     super.dispose();
   }
+  final isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +42,6 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
 
     final authProv  = context.watch<AuthProvider>();
     final status    = authProv.status;
-    final isLoading = status == AuthStatus.authenticating;
     final codeSent  = status == AuthStatus.codeSent;
 
     return Scaffold(
@@ -144,6 +144,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
 
                             // OTP input & verify (after codeSent)
                             if (codeSent) ...[
+
                               PinCodeTextField(
                                 appContext: context,
                                 length: 6,
@@ -172,14 +173,20 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                               ElevatedButton(
                                 onPressed: (_smsCode?.length == 6 && !isLoading)
                                     ? () async{
-                                  await authProv.submitSmsCode(_smsCode!);
-                                  if (authProv.user != null){
-                                    String id = authProv.user!.uid;
-                                    List<String> intersest = authProv.user!.interests;
-                                    await context.read<InterestProvider>().updateInterests(intersest, id);
+                                  try {
+
+                                    await authProv.submitSmsCode(_smsCode!);
+                                    if (authProv.user != null){
+                                      String id = authProv.user!.uid;
+                                      List<String> intersest = authProv.user!.interests;
+                                      await context.read<InterestProvider>().updateInterests(intersest, id);
+                                    }
+
+                                    context.go('/');
+                                  }catch(e){
+                                    if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text (e.toString())));
                                   }
 
-                                  context.go('/');
                                 }
                                     : null,
                                 style: ElevatedButton.styleFrom(
@@ -204,8 +211,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                                 children: [
                                   if (!authProv.canResend) ...[
                                     Text(
-                                      t.resendIn.toString()
-                                          .replaceFirst('{seconds}', authProv.countdown.toString()),
+                                      t.waitFor1Minute.toString(),
                                       style: theme.textTheme.bodyMedium,
                                     ),
                                   ] else ...[

@@ -95,8 +95,8 @@ class GroupJoinRequestModel extends HiveObject {
     'inviteeName': inviteeName,
     'status': status.name,
     'approverId': approverId,
-    'requestedAt': Timestamp.fromDate(requestedAt),
-    'respondedAt': respondedAt != null ? Timestamp.fromDate(respondedAt!) : null,
+    'requestedAt': requestedAt,
+    'respondedAt': respondedAt != null ? respondedAt! : null,
     'message': message,
   };
 

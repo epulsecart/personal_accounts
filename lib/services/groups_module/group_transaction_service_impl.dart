@@ -41,6 +41,27 @@ class GroupTransactionServiceImpl implements GroupTransactionService {
     ));
   }
 
+  @override
+  Future<void> approveTransaction(String txnId) async {
+    final txn = _box.get(txnId);
+    if (txn == null) throw Exception('Transaction not found');
+
+    final updated = txn.copyWith(
+      isApproved: true,
+      updatedAt: DateTime.now(),
+    );
+
+    await _box.put(txnId, updated);
+
+    final m = OfflineMutation.update(
+      collection: 'group_transactions',
+      docId: txnId,
+      data: updated.toMap(),
+    );
+    await _mutBox.add(m);
+  }
+
+
   // ─ Local reads from Hive ────────────────────────────────────────────────
   @override
   Future<List<GroupTransactionModel>> fetchAll(String groupId) async {

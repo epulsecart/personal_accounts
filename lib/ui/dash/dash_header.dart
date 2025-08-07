@@ -16,6 +16,7 @@ class DashboardHeader extends StatelessWidget {
   final VoidCallback onSettingsTap;
   final TextEditingController controller;
   final FocusNode focusNode;
+  final VoidCallback getExcel;
 
   const DashboardHeader({
     required this.spent,
@@ -25,6 +26,7 @@ class DashboardHeader extends StatelessWidget {
     required this.onSettingsTap,
     required this.controller,
     required this.focusNode,
+    required this.getExcel,
     super.key,
   });
 
@@ -40,7 +42,7 @@ class DashboardHeader extends StatelessWidget {
 
     return SliverAppBar(
       backgroundColor: Colors.transparent,
-      expandedHeight: 160,
+      expandedHeight: 163,
       pinned: false,
       floating: false,
       snap: false,
@@ -107,36 +109,55 @@ class DashboardHeader extends StatelessWidget {
                 const SizedBox(height: AppConstants.spaceM),
 
                 // 2) Glass‐morphic spent/income summary
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-                    child: Container(
-                      padding: const EdgeInsets.all(AppConstants.spaceM),
-                      decoration: BoxDecoration(
-                        color: colors.surface.withOpacity(0.4),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: colors.outline.withOpacity(0.6),
-                          width: 1,
+                GestureDetector(
+                  onTap: (){
+                    getExcel();
+                  },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                      child: Container(
+                        padding: const EdgeInsets.all(AppConstants.spaceM),
+                        decoration: BoxDecoration(
+                          color: colors.surface.withOpacity(0.4),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: colors.outline.withOpacity(0.6),
+                            width: 1,
+                          ),
                         ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          _SummaryItem(
-                            icon: Icons.arrow_upward,
-                            iconColor: colors.error,
-                            label: t.spentThisMonth,
-                            amount: fmt(spent),
-                          ),
-                          _SummaryItem(
-                            icon: Icons.arrow_downward,
-                            iconColor: colors.primary,
-                            label: t.incomeThisMonth,
-                            amount: fmt(income),
-                          ),
-                        ],
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                _SummaryItem(
+                                  icon: Icons.arrow_upward,
+                                  iconColor: colors.error,
+                                  label: t.spentThisMonth,
+                                  amount: fmt(spent),
+                                ),
+                                _SummaryItem(
+                                  icon: Icons.arrow_downward,
+                                  iconColor: colors.primary,
+                                  label: t.incomeThisMonth,
+                                  amount: fmt(income),
+                                ),
+                              ],
+                            ),
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.start,
+                            //   children: [
+                            //     Text(S.of(context).getexcel, style: TextStyle(fontSize: 12),),
+                            //     SizedBox(width: 10,),
+                            //     Icon(Icons.download)
+                            //   ],
+                            // )
+                          ],
+                        ),
                       ),
                     ),
                   ),

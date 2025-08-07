@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive/hive.dart';
 
+import '../../data/groups_module/group_transaction_model.dart';
 import '../../data/groups_module/group_txn_change_request_model.dart';
 import '../../data/offline_mutation.dart';
 import 'group_txn_change_request_service.dart';
@@ -29,32 +30,44 @@ class GroupTxnChangeRequestServiceImpl
         _queueBox  = queueBox,
         _fs        = firestore ?? FirebaseFirestore.instance;
 
-  CollectionReference<Map<String, dynamic>> get _col => _fs
+  CollectionReference<Map<String, dynamic>> get _col {
+    try {
+    return _fs
       .collection('groups')
       .doc(groupId)
       .collection('transactions')
       .doc(txnId)
       .collection('changeRequests');
+    }catch(e){
+      print ("issue is $e $groupId - $txnId");
+      return _fs.collection('groups');
+    }
+
+  }
 
   @override
   Future<void> requestChange(GroupTxnChangeRequestModel req) async {
-    // 1) local
-    await _box.put(req.id, req);
-    // 2) enqueue for remote
-    final m = OfflineMutation(
-      collection:    _domain,
-      docId:  req.id,
-      operation: MutationOp.create,
-      data:      req.toMap(),
-    );
-    await _queueBox.add(m);
+    try{ // 1) local
+      await _box.put(req.id, req);
+      // 2) enqueue for remote
+      final m = OfflineMutation(
+        collection: _domain,
+        docId: req.id,
+        operation: MutationOp.create,
+        data: req.toMap(),
+      );
+      await _queueBox.add(m);
+    }catch(e){
+      print ("issue can not change $e");
+    }
   }
 
   @override
   Future<void> approveChange({
     required String requestId,
     required String approverId,
-  }) async {
+  })
+  async {
     final existing = _box.get(requestId);
     if (existing == null) throw Exception('No such request');
     final updated = existing.copyWith(
@@ -71,6 +84,26 @@ class GroupTxnChangeRequestServiceImpl
       data:      updated.toMap(),
     );
     await _queueBox.add(m);
+
+    final txnBox = Hive.box<GroupTransactionModel>('group_transactions');
+    final Box<OfflineMutation>_mutBox = Hive.box<OfflineMutation>('mutation_queue');
+
+    final txn = txnBox.get(txnId);
+    if (txn != null) {
+      final newTxn = txn.copyWith(
+        amount: updated.newAmount ?? txn.amount,
+        description: updated.newDescription ?? txn.description,
+        updatedAt: DateTime.now(),
+      );
+      await txnBox.put(txnId, newTxn);
+      final m = OfflineMutation.update(
+        collection: 'group_transactions',
+        docId: txnId,
+        data: newTxn.toMap(),
+      );
+      await _mutBox.add(m);
+    }
+
   }
 
   @override
@@ -110,10 +143,13 @@ class GroupTxnChangeRequestServiceImpl
 
   @override
   Future<void> syncUpstream() async {
+    print ("txn change start sync ${_queueBox.values.length}");
     for (var m in _queueBox.values
         .where((m) => m.collection == _domain)
         .toList()) {
+      print ("i am in for");
       final ref = _col.doc(m.docId);
+      print ("ref is ${ref.path}");
       try {
         switch (m.operation) {
           case MutationOp.create:
@@ -124,8 +160,9 @@ class GroupTxnChangeRequestServiceImpl
             await ref.delete();
             break;
         }
-        await m.delete(); // remove from queue on success
-      } catch (_) {
+        // await m.delete(); // remove from queue on success
+      } catch (e) {
+        print ("can not push online $e");
         // leave it for retry
       }
     }
@@ -133,10 +170,15 @@ class GroupTxnChangeRequestServiceImpl
 
   @override
   Future<void> syncDownstream() async {
-    final snap = await _col.get();
-    for (var doc in snap.docs) {
-      final model = GroupTxnChangeRequestModel.fromFirestore(doc);
-      await _box.put(model.id, model);
+    try{
+      final snap = await _col.get();
+      for (var doc in snap.docs) {
+        print ("got doc it is ${doc.id} - ${doc.data()}");
+        final model = GroupTxnChangeRequestModel.fromFirestore(doc);
+        await _box.put(model.id, model);
+      }
+    }catch(e){
+      print ("issue can not sync change down stream $e");
     }
   }
 

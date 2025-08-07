@@ -6,6 +6,8 @@ import '../user_module/transactions_service.dart';
 abstract class GroupTransactionService {
   /// === Local‐only writes (and enqueue for remote) ===
   Future<void> addTransaction(GroupTransactionModel txn);
+  Future<void> approveTransaction(String txnId);
+
 
   /// === Local reads from Hive (all in-memory) ===
   Future<List<GroupTransactionModel>> fetchAll(String groupId);

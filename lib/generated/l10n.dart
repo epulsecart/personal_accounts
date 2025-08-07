@@ -18,10 +18,8 @@ class S {
   static S? _current;
 
   static S get current {
-    assert(
-      _current != null,
-      'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.',
-    );
+    assert(_current != null,
+        'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.');
     return _current!;
   }
 
@@ -43,10 +41,8 @@ class S {
 
   static S of(BuildContext context) {
     final instance = S.maybeOf(context);
-    assert(
-      instance != null,
-      'No instance of S present in the widget tree. Did you add S.delegate in localizationsDelegates?',
-    );
+    assert(instance != null,
+        'No instance of S present in the widget tree. Did you add S.delegate in localizationsDelegates?');
     return instance!;
   }
 
@@ -76,7 +72,12 @@ class S {
 
   /// `التالي`
   String get next {
-    return Intl.message('التالي', name: 'next', desc: '', args: []);
+    return Intl.message(
+      'التالي',
+      name: 'next',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `لديّ حساب مسبق`
@@ -111,7 +112,12 @@ class S {
 
   /// `إدارة مشروع`
   String get project {
-    return Intl.message('إدارة مشروع', name: 'project', desc: '', args: []);
+    return Intl.message(
+      'إدارة مشروع',
+      name: 'project',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `مرحبًا بعودتك! الرجاء اختيار طريقة تسجيل الدخول`
@@ -166,7 +172,12 @@ class S {
 
   /// `تذكرني`
   String get rememberMe {
-    return Intl.message('تذكرني', name: 'rememberMe', desc: '', args: []);
+    return Intl.message(
+      'تذكرني',
+      name: 'rememberMe',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `نسيت كلمة المرور`
@@ -181,12 +192,22 @@ class S {
 
   /// `دخول`
   String get login {
-    return Intl.message('دخول', name: 'login', desc: '', args: []);
+    return Intl.message(
+      'دخول',
+      name: 'login',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `او`
   String get or {
-    return Intl.message('او', name: 'or', desc: '', args: []);
+    return Intl.message(
+      'او',
+      name: 'or',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `دخول عبر حساب APPLE`
@@ -249,10 +270,10 @@ class S {
     );
   }
 
-  /// `إعادة الإرسال خلال {seconds}ث`
+  /// `إعادة الإرسال خلال`
   String resendIn(Object seconds) {
     return Intl.message(
-      'إعادة الإرسال خلال $secondsث',
+      'إعادة الإرسال خلال',
       name: 'resendIn',
       desc: 'النص الذي يعرض العداد قبل تفعيل زر الإرسال',
       args: [seconds],
@@ -261,17 +282,32 @@ class S {
 
   /// `شخصي`
   String get personalTab {
-    return Intl.message('شخصي', name: 'personalTab', desc: '', args: []);
+    return Intl.message(
+      'شخصي',
+      name: 'personalTab',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `مجموعات`
   String get groupsTab {
-    return Intl.message('مجموعات', name: 'groupsTab', desc: '', args: []);
+    return Intl.message(
+      'مجموعات',
+      name: 'groupsTab',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `مشاريع`
   String get projectsTab {
-    return Intl.message('مشاريع', name: 'projectsTab', desc: '', args: []);
+    return Intl.message(
+      'مشاريع',
+      name: 'projectsTab',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `ابحث بالاسم أو الوصف`
@@ -336,7 +372,12 @@ class S {
 
   /// `التقاط صورة`
   String get takePhoto {
-    return Intl.message('التقاط صورة', name: 'takePhoto', desc: '', args: []);
+    return Intl.message(
+      'التقاط صورة',
+      name: 'takePhoto',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `اختيار من المعرض`
@@ -361,7 +402,12 @@ class S {
 
   /// `أدخل المبلغ`
   String get amountHint {
-    return Intl.message('أدخل المبلغ', name: 'amountHint', desc: '', args: []);
+    return Intl.message(
+      'أدخل المبلغ',
+      name: 'amountHint',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `الرجاء إدخال مبلغ`
@@ -396,7 +442,12 @@ class S {
 
   /// `إرفاق ملف`
   String get attachFile {
-    return Intl.message('إرفاق ملف', name: 'attachFile', desc: '', args: []);
+    return Intl.message(
+      'إرفاق ملف',
+      name: 'attachFile',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `فئة جديدة`
@@ -411,7 +462,12 @@ class S {
 
   /// `دخل`
   String get income {
-    return Intl.message('دخل', name: 'income', desc: '', args: []);
+    return Intl.message(
+      'دخل',
+      name: 'income',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `لا يوجد اي عمليه سابقة`
@@ -426,7 +482,12 @@ class S {
 
   /// `مصروف`
   String get expense {
-    return Intl.message('مصروف', name: 'expense', desc: '', args: []);
+    return Intl.message(
+      'مصروف',
+      name: 'expense',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `تعديل الفئة`
@@ -571,7 +632,12 @@ class S {
 
   /// `حذف`
   String get yesDelete {
-    return Intl.message('حذف', name: 'yesDelete', desc: '', args: []);
+    return Intl.message(
+      'حذف',
+      name: 'yesDelete',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `تم تعديل المعاملة`
@@ -636,32 +702,62 @@ class S {
 
   /// `الصافي`
   String get reportTypeNet {
-    return Intl.message('الصافي', name: 'reportTypeNet', desc: '', args: []);
+    return Intl.message(
+      'الصافي',
+      name: 'reportTypeNet',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `اليوم`
   String get rangeToday {
-    return Intl.message('اليوم', name: 'rangeToday', desc: '', args: []);
+    return Intl.message(
+      'اليوم',
+      name: 'rangeToday',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `هذا الأسبوع`
   String get rangeWeek {
-    return Intl.message('هذا الأسبوع', name: 'rangeWeek', desc: '', args: []);
+    return Intl.message(
+      'هذا الأسبوع',
+      name: 'rangeWeek',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `هذا الشهر`
   String get rangeMonth {
-    return Intl.message('هذا الشهر', name: 'rangeMonth', desc: '', args: []);
+    return Intl.message(
+      'هذا الشهر',
+      name: 'rangeMonth',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `هذا العام`
   String get rangeYear {
-    return Intl.message('هذا العام', name: 'rangeYear', desc: '', args: []);
+    return Intl.message(
+      'هذا العام',
+      name: 'rangeYear',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `مخصص`
   String get rangeCustom {
-    return Intl.message('مخصص', name: 'rangeCustom', desc: '', args: []);
+    return Intl.message(
+      'مخصص',
+      name: 'rangeCustom',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `لا توجد بيانات لهذه الفترة.`
@@ -676,7 +772,12 @@ class S {
 
   /// `التقارير`
   String get reportsTitle {
-    return Intl.message('التقارير', name: 'reportsTitle', desc: '', args: []);
+    return Intl.message(
+      'التقارير',
+      name: 'reportsTitle',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `اختر فترة التاريخ`
@@ -691,7 +792,12 @@ class S {
 
   /// `عرض`
   String get reportsTypeLabel {
-    return Intl.message('عرض', name: 'reportsTypeLabel', desc: '', args: []);
+    return Intl.message(
+      'عرض',
+      name: 'reportsTypeLabel',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `جارٍ تحميل التقرير…`
@@ -706,7 +812,12 @@ class S {
 
   /// `الإعدادات`
   String get settingsTitle {
-    return Intl.message('الإعدادات', name: 'settingsTitle', desc: '', args: []);
+    return Intl.message(
+      'الإعدادات',
+      name: 'settingsTitle',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `المظهر`
@@ -721,22 +832,42 @@ class S {
 
   /// `الوضع الداكن`
   String get darkMode {
-    return Intl.message('الوضع الداكن', name: 'darkMode', desc: '', args: []);
+    return Intl.message(
+      'الوضع الداكن',
+      name: 'darkMode',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `اللغة`
   String get languageSection {
-    return Intl.message('اللغة', name: 'languageSection', desc: '', args: []);
+    return Intl.message(
+      'اللغة',
+      name: 'languageSection',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `English`
   String get languageEnglish {
-    return Intl.message('English', name: 'languageEnglish', desc: '', args: []);
+    return Intl.message(
+      'English',
+      name: 'languageEnglish',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `العربية`
   String get languageArabic {
-    return Intl.message('العربية', name: 'languageArabic', desc: '', args: []);
+    return Intl.message(
+      'العربية',
+      name: 'languageArabic',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `الإشعارات`
@@ -791,12 +922,22 @@ class S {
 
   /// `الحساب`
   String get accountSection {
-    return Intl.message('الحساب', name: 'accountSection', desc: '', args: []);
+    return Intl.message(
+      'الحساب',
+      name: 'accountSection',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `تغيير الاسم`
   String get changeName {
-    return Intl.message('تغيير الاسم', name: 'changeName', desc: '', args: []);
+    return Intl.message(
+      'تغيير الاسم',
+      name: 'changeName',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `تغيير البريد الإلكتروني`
@@ -821,7 +962,12 @@ class S {
 
   /// `تسجيل خروج`
   String get logout {
-    return Intl.message('تسجيل خروج', name: 'logout', desc: '', args: []);
+    return Intl.message(
+      'تسجيل خروج',
+      name: 'logout',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `هل أنت متأكد أنّك تريد الخروج؟`
@@ -891,6 +1037,718 @@ class S {
       'تحديث الملف الشخصي',
       name: 'updateProfile',
       desc: 'Button text to submit the profile update',
+      args: [],
+    );
+  }
+
+  /// `هناك مشكله في تحميل البيانات`
+  String get errorLoadingData {
+    return Intl.message(
+      'هناك مشكله في تحميل البيانات',
+      name: 'errorLoadingData',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اعادة المحاولة`
+  String get retry {
+    return Intl.message(
+      'اعادة المحاولة',
+      name: 'retry',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `انفقت`
+  String get spent {
+    return Intl.message(
+      'انفقت',
+      name: 'spent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `استلمت`
+  String get received {
+    return Intl.message(
+      'استلمت',
+      name: 'received',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اخر تحديث`
+  String get lastUpdated {
+    return Intl.message(
+      'اخر تحديث',
+      name: 'lastUpdated',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `المجموعات`
+  String get groupList {
+    return Intl.message(
+      'المجموعات',
+      name: 'groupList',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `إنظم`
+  String get joinNewGroup {
+    return Intl.message(
+      'إنظم',
+      name: 'joinNewGroup',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لم يتم اضافتك الى اي قروب`
+  String get noGroupsFound {
+    return Intl.message(
+      'لم يتم اضافتك الى اي قروب',
+      name: 'noGroupsFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `حصلت مشكله عند انشاء المجموعة`
+  String get errorCreatingGroup {
+    return Intl.message(
+      'حصلت مشكله عند انشاء المجموعة',
+      name: 'errorCreatingGroup',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `انشاء مجموعة`
+  String get createGroup {
+    return Intl.message(
+      'انشاء مجموعة',
+      name: 'createGroup',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اسم المجموعة`
+  String get groupName {
+    return Intl.message(
+      'اسم المجموعة',
+      name: 'groupName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `وصف المجموعة`
+  String get descriptionOptional {
+    return Intl.message(
+      'وصف المجموعة',
+      name: 'descriptionOptional',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `انشاء`
+  String get create {
+    return Intl.message(
+      'انشاء',
+      name: 'create',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم طلب الانضمام بنجاح`
+  String get joinRequestSent {
+    return Intl.message(
+      'تم طلب الانضمام بنجاح',
+      name: 'joinRequestSent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `فشل الانضمام للمجموعة`
+  String get errorJoiningGroup {
+    return Intl.message(
+      'فشل الانضمام للمجموعة',
+      name: 'errorJoiningGroup',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `عمليات المجموعة`
+  String get groupDetails {
+    return Intl.message(
+      'عمليات المجموعة',
+      name: 'groupDetails',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ادخل كود المجموعة يدوياً`
+  String get enterJoinCode {
+    return Intl.message(
+      'ادخل كود المجموعة يدوياً',
+      name: 'enterJoinCode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Timeline View`
+  String get timelineView {
+    return Intl.message(
+      'Timeline View',
+      name: 'timelineView',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Table View`
+  String get tableView {
+    return Intl.message(
+      'Table View',
+      name: 'tableView',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No transactions yet.`
+  String get noTransactionsYet {
+    return Intl.message(
+      'No transactions yet.',
+      name: 'noTransactionsYet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Approved`
+  String get approved {
+    return Intl.message(
+      'Approved',
+      name: 'approved',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pending`
+  String get pending {
+    return Intl.message(
+      'Pending',
+      name: 'pending',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Approve`
+  String get approve {
+    return Intl.message(
+      'Approve',
+      name: 'approve',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Transaction Approved`
+  String get transactionApproved {
+    return Intl.message(
+      'Transaction Approved',
+      name: 'transactionApproved',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `عملية جديدة`
+  String get newTransaction {
+    return Intl.message(
+      'عملية جديدة',
+      name: 'newTransaction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ل `
+  String get receiver {
+    return Intl.message(
+      'ل ',
+      name: 'receiver',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `من `
+  String get payer {
+    return Intl.message(
+      'من ',
+      name: 'payer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `حفظ `
+  String get submit {
+    return Intl.message(
+      'حفظ ',
+      name: 'submit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم انشاء العملية`
+  String get transactionCreated {
+    return Intl.message(
+      'تم انشاء العملية',
+      name: 'transactionCreated',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `التاريخ`
+  String get date {
+    return Intl.message(
+      'التاريخ',
+      name: 'date',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الوصف`
+  String get description {
+    return Intl.message(
+      'الوصف',
+      name: 'description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `المبلغ `
+  String get amount {
+    return Intl.message(
+      'المبلغ ',
+      name: 'amount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `من -> الى`
+  String get fromTo {
+    return Intl.message(
+      'من -> الى',
+      name: 'fromTo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الحالة`
+  String get status {
+    return Intl.message(
+      'الحالة',
+      name: 'status',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الموافقة على العملية`
+  String get approveTransaction {
+    return Intl.message(
+      'الموافقة على العملية',
+      name: 'approveTransaction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تاكيد العملية`
+  String get confirmApproveTransaction {
+    return Intl.message(
+      'تاكيد العملية',
+      name: 'confirmApproveTransaction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم ارسال طلب التعديل يجب الموافقه من الطرف الاخر`
+  String get changeRequestSentForApproval {
+    return Intl.message(
+      'تم ارسال طلب التعديل يجب الموافقه من الطرف الاخر',
+      name: 'changeRequestSentForApproval',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `يوجد طلب تعديل معلق الرجاء الموافقة عليك اولا`
+  String get alreadyHaveAPendingRequest {
+    return Intl.message(
+      'يوجد طلب تعديل معلق الرجاء الموافقة عليك اولا',
+      name: 'alreadyHaveAPendingRequest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `طلب تعديل`
+  String get requestChange {
+    return Intl.message(
+      'طلب تعديل',
+      name: 'requestChange',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تاريخ الطلبات`
+  String get changeHistory {
+    return Intl.message(
+      'تاريخ الطلبات',
+      name: 'changeHistory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الأعضاء`
+  String get membersTabTitle {
+    return Intl.message(
+      'الأعضاء',
+      name: 'membersTabTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أنت`
+  String get memberLabelYou {
+    return Intl.message(
+      'أنت',
+      name: 'memberLabelYou',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `المسؤول`
+  String get memberLabelAdmin {
+    return Intl.message(
+      'المسؤول',
+      name: 'memberLabelAdmin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الرصيد`
+  String get memberBalance {
+    return Intl.message(
+      'الرصيد',
+      name: 'memberBalance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لا يوجد أعضاء.`
+  String get noMembersFound {
+    return Intl.message(
+      'لا يوجد أعضاء.',
+      name: 'noMembersFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count, plural, one {عضو واحد} other {# أعضاء}}`
+  String membersCountLabel(num count) {
+    return Intl.plural(
+      count,
+      one: 'عضو واحد',
+      other: '# أعضاء',
+      name: 'membersCountLabel',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `طلبات الانضمام`
+  String get joinRequestsTab {
+    return Intl.message(
+      'طلبات الانضمام',
+      name: 'joinRequestsTab',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `شارك هذه المجموعة مع الآخرين`
+  String get shareGroupInfo {
+    return Intl.message(
+      'شارك هذه المجموعة مع الآخرين',
+      name: 'shareGroupInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `يمكنهم مسح رمز QR أو إدخال هذا الرمز:`
+  String get scanToJoin {
+    return Intl.message(
+      'يمكنهم مسح رمز QR أو إدخال هذا الرمز:',
+      name: 'scanToJoin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `نسخ رمز الانضمام`
+  String get copyJoinCode {
+    return Intl.message(
+      'نسخ رمز الانضمام',
+      name: 'copyJoinCode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `فقط المدير يمكنه رؤية والموافقة على طلبات الانضمام.`
+  String get onlyAdminsCanViewRequests {
+    return Intl.message(
+      'فقط المدير يمكنه رؤية والموافقة على طلبات الانضمام.',
+      name: 'onlyAdminsCanViewRequests',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الطلبات المعلقة`
+  String get pendingRequests {
+    return Intl.message(
+      'الطلبات المعلقة',
+      name: 'pendingRequests',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `رفض`
+  String get reject {
+    return Intl.message(
+      'رفض',
+      name: 'reject',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `طالب الانضمام`
+  String get requester {
+    return Intl.message(
+      'طالب الانضمام',
+      name: 'requester',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الشخص المدعو`
+  String get invitee {
+    return Intl.message(
+      'الشخص المدعو',
+      name: 'invitee',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم الطلب في`
+  String get requestDate {
+    return Intl.message(
+      'تم الطلب في',
+      name: 'requestDate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم قبول المستخدم بنجاح`
+  String get approvedSuccessfully {
+    return Intl.message(
+      'تم قبول المستخدم بنجاح',
+      name: 'approvedSuccessfully',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم رفض المستخدم بنجاح`
+  String get rejectedSuccessfully {
+    return Intl.message(
+      'تم رفض المستخدم بنجاح',
+      name: 'rejectedSuccessfully',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الملخص`
+  String get summary {
+    return Intl.message(
+      'الملخص',
+      name: 'summary',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الرصيد لكل عضو`
+  String get balancePerMember {
+    return Intl.message(
+      'الرصيد لكل عضو',
+      name: 'balancePerMember',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لا توجد بيانات`
+  String get noData {
+    return Intl.message(
+      'لا توجد بيانات',
+      name: 'noData',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `العمليات`
+  String get transactions {
+    return Intl.message(
+      'العمليات',
+      name: 'transactions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `انضمام`
+  String get joinCode {
+    return Intl.message(
+      'انضمام',
+      name: 'joinCode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الاعضاء`
+  String get members {
+    return Intl.message(
+      'الاعضاء',
+      name: 'members',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تمت الموافقة`
+  String get requestApproved {
+    return Intl.message(
+      'تمت الموافقة',
+      name: 'requestApproved',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم الرفض`
+  String get requestRejected {
+    return Intl.message(
+      'تم الرفض',
+      name: 'requestRejected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اربط الحزام — شيء رهيب على وشك الانطلاق!`
+  String get projectIsComing {
+    return Intl.message(
+      'اربط الحزام — شيء رهيب على وشك الانطلاق!',
+      name: 'projectIsComing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `طلب رمز جديد خلال دقيقة!`
+  String get waitFor1Minute {
+    return Intl.message(
+      'طلب رمز جديد خلال دقيقة!',
+      name: 'waitFor1Minute',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تحميل`
+  String get getexcel {
+    return Intl.message(
+      'تحميل',
+      name: 'getexcel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اضفط هنا`
+  String get tapHere {
+    return Intl.message(
+      'اضفط هنا',
+      name: 'tapHere',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اختار التصنيف من بطائق التصنيفات او قم ب انشاء تصنيف جديد عن طريق كتابه الاسم ثم اضغط على +`
+  String get selectOrAddCategory {
+    return Intl.message(
+      'اختار التصنيف من بطائق التصنيفات او قم ب انشاء تصنيف جديد عن طريق كتابه الاسم ثم اضغط على +',
+      name: 'selectOrAddCategory',
+      desc: '',
       args: [],
     );
   }

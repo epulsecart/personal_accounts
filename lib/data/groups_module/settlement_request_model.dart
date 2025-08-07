@@ -62,9 +62,9 @@ class SettlementRequestModel extends HiveObject {
     'targetMemberName': targetMemberName,
     'amount': amount,
     'note': note,
-    'dueDate': Timestamp.fromDate(dueDate),
+    'dueDate': dueDate,
     'settled': settled,
-    'requestedAt': Timestamp.fromDate(requestedAt),
+    'requestedAt': requestedAt,
   };
 
   SettlementRequestModel copyWith({

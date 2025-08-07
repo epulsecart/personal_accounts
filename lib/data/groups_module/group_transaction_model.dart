@@ -21,6 +21,8 @@ class GroupTransactionModel extends HiveObject {
   @HiveField(11) final DateTime createdAt;
   @HiveField(12) final DateTime updatedAt;
   @HiveField(13) final bool isDeleted;
+  @HiveField(14) final String payerName;
+  @HiveField(15) final String receiverName;
 
   GroupTransactionModel({
     required this.id,
@@ -37,6 +39,8 @@ class GroupTransactionModel extends HiveObject {
     required this.createdAt,
     required this.updatedAt,
     required this.isDeleted,
+    required this.payerName,
+    required this.receiverName,
   });
 
   factory GroupTransactionModel.fromFirestore(DocumentSnapshot doc) {
@@ -56,6 +60,8 @@ class GroupTransactionModel extends HiveObject {
       approvedBy: d['approvedBy'] as String?,
       createdAt: (d['createdAt'] as Timestamp).toDate(),
       updatedAt: (d['updatedAt'] as Timestamp).toDate(),
+        payerName: d['payerName'] as String,
+        receiverName: d['receiverName'] as String,
     );
   }
 
@@ -67,12 +73,14 @@ class GroupTransactionModel extends HiveObject {
     'amount': amount,
     'description': description,
     'fileUrl': fileUrl,
-    'date': Timestamp.fromDate(date),
+    'date': date,
     'isApproved': isApproved,
     'approvedBy': approvedBy,
     'isDeleted': isDeleted,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': FieldValue.serverTimestamp(),
+    'createdAt': createdAt,
+    'payerName':payerName,
+   'receiverName':receiverName,
+    'updatedAt': DateTime.now(),
   };
 
   GroupTransactionModel copyWith({
@@ -90,6 +98,8 @@ class GroupTransactionModel extends HiveObject {
       fromUserId: fromUserId,
       toUserId: toUserId,
       createdBy: createdBy,
+      payerName: payerName,
+      receiverName: receiverName,
       amount: amount ?? this.amount,
       description: description ?? this.description,
       fileUrl: fileUrl ?? this.fileUrl,

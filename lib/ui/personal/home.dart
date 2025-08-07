@@ -72,6 +72,7 @@ class _PersonalModuleViewState extends State<PersonalModuleView> {
       ],
       spentAmount: spent,
       incomeAmount: income,
+      getExcel: (){},
       onSettingsTap: () => context.push('/settings'),
       searchText: _search,
       onSearchChanged: (val) => setState(() => _search = val),

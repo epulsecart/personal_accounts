@@ -83,18 +83,18 @@ class SettingsScreen extends StatelessWidget {
         ListTile(
           title: Text(t.changeName),
           trailing: const Icon(Icons.chevron_right),
-          onTap: () => Navigator.pushNamed(context, '/account/name'),
+          onTap: () => context.push('/editProfile'),
         ),
-        ListTile(
-          title: Text(t.changeEmail),
-          trailing: const Icon(Icons.chevron_right),
-          onTap: () => Navigator.pushNamed(context, '/account/email'),
-        ),
-        ListTile(
-          title: Text(t.changePhone),
-          trailing: const Icon(Icons.chevron_right),
-          onTap: () => Navigator.pushNamed(context, '/account/phone'),
-        ),
+        // ListTile(
+        //   title: Text(t.changeEmail),
+        //   trailing: const Icon(Icons.chevron_right),
+        //   onTap: () => Navigator.pushNamed(context, '/account/email'),
+        // ),
+        // ListTile(
+        //   title: Text(t.changePhone),
+        //   trailing: const Icon(Icons.chevron_right),
+        //   onTap: () => Navigator.pushNamed(context, '/account/phone'),
+        // ),
         const Divider(),
 
         // ───────── Sign Out ─────────
@@ -117,12 +117,10 @@ class SettingsScreen extends StatelessWidget {
           TextButton(child: Text(t.cancel), onPressed: () => Navigator.pop(ctx)),
           ElevatedButton(
             child: Text(t.logout),
-            onPressed: () {
+            onPressed: () async{
               try {
+                await ctx.read<AuthProvider>().signOut();
 
-                ctx.read<AuthProvider>().signOut();
-                print (" i will redirect into the splash now ");
-                ctx.go('/splash');
               }catch(e){
                 print ("can not sign out error is $e");
               }
